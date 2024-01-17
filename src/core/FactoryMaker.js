@@ -28,6 +28,15 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *  POSSIBILITY OF SUCH DAMAGE.
  */
+
+// 这个类是一个关键工厂，负责创建所有通过调用player.create()初始化的对象
+// 在项目中每个文件的底部，您将看到一些 FactoryMarker 逻辑。请熟悉这段代码。如果您添加单例或类，您将需要遵循此方法。
+
+/** 样例
+ let factory = FactoryMaker.getSingletonFactory(MediaPlayerModel);
+ export default factory;
+*/
+
 /**
  * @module FactoryMaker
  * @ignore

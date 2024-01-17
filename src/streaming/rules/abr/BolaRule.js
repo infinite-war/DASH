@@ -41,9 +41,13 @@ import Debug from '../../../core/Debug';
 import MediaPlayerEvents from '../../MediaPlayerEvents';
 import Constants from '../../constants/Constants';
 
+// BOLA的三种状态
 // BOLA_STATE_ONE_BITRATE   : If there is only one bitrate (or initialization failed), always return NO_CHANGE.
+//                            特殊case，如仅有一个码率或者初始化失败
 // BOLA_STATE_STARTUP       : Set placeholder buffer such that we download fragments at most recently measured throughput.
+//                            默认初始状态，基于placeholder buffer进行码率决策
 // BOLA_STATE_STEADY        : Buffer primed, we switch to steady operation.
+//                            buffer足够时，基于BOLA进行决策（重点）
 // TODO: add BOLA_STATE_SEEK and tune BOLA behavior on seeking
 const BOLA_STATE_ONE_BITRATE = 0;
 const BOLA_STATE_STARTUP = 1;
@@ -87,6 +91,7 @@ function BolaRule(config) {
         // no need to worry about offset, utilities will be offset (uniformly) anyway later
     }
 
+    // 计算BOLA相关参数，见 https://blog.csdn.net/LvGreat/article/details/130487156?spm=1001.2014.3001.5501
     // NOTE: in live streaming, the real buffer level can drop below minimumBufferS, but bola should not stick to lowest bitrate by using a placeholder buffer level
     function calculateBolaParameters(stableBufferTime, bitrates, utilities) {
         const highestUtilityIndex = utilities.reduce((highestIndex, u, uIndex) => (u > utilities[highestIndex] ? uIndex : highestIndex), 0);
@@ -98,6 +103,8 @@ function BolaRule(config) {
 
         const bufferTime = Math.max(stableBufferTime, MINIMUM_BUFFER_S + MINIMUM_BUFFER_PER_BITRATE_LEVEL_S * bitrates.length);
 
+        // 代码中参数设置的逻辑是：使得BOLA可以在缓冲区水平为minimumBufferS时选择最低码率，
+        // 在bufferTarget时选择最高码率，这个设定类似于BBA的双阈值。
         // TODO: Investigate if following can be better if utilities are not the default Math.log utilities.
         // If using Math.log utilities, we can choose Vp and gp to always prefer bitrates[0] at minimumBufferS and bitrates[max] at bufferTarget.
         // (Vp * (utility + gp) - bufferLevel) / bitrate has the maxima described when:
@@ -383,7 +390,9 @@ function BolaRule(config) {
         }
     }
 
+    // 决策函数
     function getMaxIndex(rulesContext) {
+        // 初始化
         const switchRequest = SwitchRequest(context).create();
 
         if (!rulesContext || !rulesContext.hasOwnProperty('getMediaInfo') || !rulesContext.hasOwnProperty('getMediaType') ||
@@ -408,6 +417,7 @@ function BolaRule(config) {
 
         scheduleController.setTimeToLoadDelay(0);
 
+        // 获取BOLA状态
         const bolaState = getBolaState(rulesContext);
 
         if (bolaState.state === BOLA_STATE_ONE_BITRATE) {
@@ -415,6 +425,7 @@ function BolaRule(config) {
             return switchRequest;
         }
 
+        // 获取可探测的信息：缓冲区水平、吞吐量、延迟
         const bufferLevel = dashMetrics.getCurrentBufferLevel(mediaType);
         const throughput = throughputHistory.getAverageThroughput(mediaType, isDynamic);
         const safeThroughput = throughputHistory.getSafeAverageThroughput(mediaType, isDynamic);
@@ -432,6 +443,7 @@ function BolaRule(config) {
 
         switch (bolaState.state) {
             case BOLA_STATE_STARTUP:
+                // 启动阶段基于RB选择码率：getQualityForBitrate
                 quality = abrController.getQualityForBitrate(mediaInfo, safeThroughput, streamId, latency);
 
                 switchRequest.quality = quality;
@@ -440,6 +452,7 @@ function BolaRule(config) {
                 bolaState.placeholderBuffer = Math.max(0, minBufferLevelForQuality(bolaState, quality) - bufferLevel);
                 bolaState.lastQuality = quality;
 
+                // 若buffer高于视频块时长，则切换为BOLA_STATE_STEADY状态
                 if (!isNaN(bolaState.lastSegmentDurationS) && bufferLevel >= bolaState.lastSegmentDurationS) {
                     bolaState.state = BOLA_STATE_STEADY;
                 }
@@ -455,8 +468,11 @@ function BolaRule(config) {
 
                 updatePlaceholderBuffer(bolaState, mediaType);
 
+                // 稳定阶段基于BOLA-BASIC选择码率：getQualityFromBufferLevel（BOLA的核心决策逻辑，与论文一致，
+                // 可参见：BOLA (INFOCOM ’16) 核心算法逻辑 https://blog.csdn.net/LvGreat/article/details/130487156）
                 quality = getQualityFromBufferLevel(bolaState, bufferLevel + bolaState.placeholderBuffer);
 
+                // BOLA-O 逻辑
                 // we want to avoid oscillations
                 // We implement the "BOLA-O" variant: when network bandwidth lies between two encoded bitrate levels, stick to the lowest level.
                 const qualityForThroughput = abrController.getQualityForBitrate(mediaInfo, safeThroughput, streamId, latency);

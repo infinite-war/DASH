@@ -40,11 +40,16 @@ import Events from '../../../core/events/Events';
 import Debug from '../../../core/Debug';
 import Constants from '../../constants/Constants';
 
+// 如果只有一个比特率（或初始化失败），则始终返回NO_CHANGE。
 const L2A_STATE_ONE_BITRATE = 0; // If there is only one bitrate (or initialization failed), always return NO_CHANGE.
+// 设置占位缓冲区，以便我们以最近测得的吞吐量下载片段。
 const L2A_STATE_STARTUP = 1; // Set placeholder buffer such that we download fragments at most recently measured throughput.
+// 缓冲区准备好，切换到稳定操作。
 const L2A_STATE_STEADY = 2; // Buffer primed, we switch to steady operation.
 
-
+// Learn2Adapt-LowLatency（L2A-LL）比特率自适应算法
+// 该算法在低延迟直播流中进行比特率自适应。
+// 它使用拉格朗日乘子等概念来调整比特率决策，以实现最小化延迟和缓冲区长度的目标
 function L2ARule(config) {
     config = config || {};
     const context = this.context;

@@ -781,17 +781,21 @@ function AbrController() {
         return null;
     }
 
+    // 根据给定的比特率（bitrate）和媒体信息（mediaInfo），返回一个表示视频质量的指数
     /**
      * @param {MediaInfo} mediaInfo
      * @param {number} bitrate A bitrate value, kbps
      * @param {String} streamId Period ID
      * @param {number|null} latency Expected latency of connection, ms
-     * @returns {number} A quality index <= for the given bitrate
+     * @returns {number} A quality index <= for the given bitrate  一个表示视频质量的索引，其范围应该是小于或等于给定比特率的可用质量级别
      * @memberof AbrController#
      */
     function getQualityForBitrate(mediaInfo, bitrate, streamId, latency = null) {
+        //  从streamProcessorDict中获取与媒体类型相关的表示（Representation）信息
         const voRepresentation = mediaInfo && mediaInfo.type ? streamProcessorDict[streamId][mediaInfo.type].getRepresentationInfo() : null;
 
+        // 处理死时间延迟（Dead Time Latency）： 如果设置了使用死时间延迟，
+        // 并且存在延迟、表示信息以及片段持续时间，则计算死时间比例，将比特率进行调整
         if (settings.get().streaming.abr.useDeadTimeLatency && latency && voRepresentation && voRepresentation.fragmentDuration) {
             latency = latency / 1000;
             const fragmentDuration = voRepresentation.fragmentDuration;
@@ -803,8 +807,11 @@ function AbrController() {
             }
         }
 
+        // 获取比特率列表： 调用getBitrateList函数获取媒体信息中可用的比特率列表
         const bitrateList = getBitrateList(mediaInfo);
 
+        // 比特率与质量匹配： 从比特率列表的高到低遍历，
+        // 找到第一个比给定比特率高的质量级别，然后返回相应的质量索引
         for (let i = bitrateList.length - 1; i >= 0; i--) {
             const bitrateInfo = bitrateList[i];
             if (bitrate * 1000 >= bitrateInfo.bitrate) {

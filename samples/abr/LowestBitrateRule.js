@@ -53,19 +53,21 @@ function LowestBitrateRuleClass() {
 
         // A smarter (real) rule could need analyze playback metrics to take
         // bitrate switching decision. Printing metrics here as a reference
+        // 更智能（实际）的规则可能需要分析播放度量来进行比特率切换决策。在此打印度量作为参考。
         console.log(metrics);
 
-        // Get current bitrate
+        // 获取当前比特率
         let streamController = StreamController(context).getInstance();
         let abrController = rulesContext.getAbrController();
         let current = abrController.getQualityFor(mediaType, streamController.getActiveStreamInfo().id);
 
-        // If already in lowest bitrate, don't do anything
+        // 如果已经是最低比特率，则不进行任何操作
         if (current === 0) {
             return SwitchRequest(context).create();
         }
 
         // Ask to switch to the lowest bitrate
+        // // 要求切换到最低比特率
         let switchRequest = SwitchRequest(context).create();
         switchRequest.quality = 0;
         switchRequest.reason = 'Always switching to the lowest bitrate';
