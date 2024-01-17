@@ -21,7 +21,24 @@ All new work should be in the development branch. Master is now reserved for tag
 All these reference builds and minified files are available under both http and https.
 
 ### Samples
+
+## quick start
+
+```bash
+npm install --force
+npm run build
+npm run start
+```
+
+打包后将生成的dist文件夹中的`dash.all.min.js`拿到需要使用的项目中即可使用
+
+https://juejin.cn/post/7018485733790842917
+
+
+
 Multiple [dash.js samples](https://reference.dashif.org/dash.js/latest/samples/index.html) covering a wide set of common use cases.
+
+
 
 ### Reference players
 The released [pre-built reference players ](http://reference.dashif.org/dash.js/) if you want direct access without writing any Javascript.
@@ -67,6 +84,15 @@ Create a video element somewhere in your html. For our purposes, make sure the c
 <video id="videoPlayer" controls></video>
 ```
 Add dash.all.min.js to the end of the body.
+
+```bash
+npm run build -->  get dash.all.min.js in build dirctory
+```
+
+
+
+
+
 ```html
 <body>
   ...
