@@ -91,7 +91,7 @@ function BolaRule(config) {
         // no need to worry about offset, utilities will be offset (uniformly) anyway later
     }
 
-    // 计算BOLA相关参数，见 https://blog.csdn.net/LvGreat/article/details/130487156?spm=1001.2014.3001.5501
+    // 计算BOLA相关参数，见 https://blog.csdn.net/LvGreat/article/details/130487156
     // NOTE: in live streaming, the real buffer level can drop below minimumBufferS, but bola should not stick to lowest bitrate by using a placeholder buffer level
     function calculateBolaParameters(stableBufferTime, bitrates, utilities) {
         const highestUtilityIndex = utilities.reduce((highestIndex, u, uIndex) => (u > utilities[highestIndex] ? uIndex : highestIndex), 0);
