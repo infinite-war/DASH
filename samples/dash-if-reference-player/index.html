@@ -32,9 +32,12 @@
     <script src="../../contrib/akamai/controlbar/ControlBar.js"></script>
     <script src="app/src/cast.js"></script>
     <script src="app/main.js"></script>
+
+    <!-- <script src="app/rules/CustomThroughputRule.js"></script>
     <script src="app/rules/DownloadRatioRule.js"></script>
-    <script src="app/rules/ThroughputRule.js"></script>
+    <script src="app/rules/ThroughputRule.js"></script> -->
     <script src="app/rules/MultiMetricsRule.js"></script>
+
 
     <!-- Google Cast -->
     <script src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script>
@@ -74,15 +77,15 @@
 <div class="container">
     <div class="row title-header">
 
-        <div class="branding">
+        <!-- <div class="branding">
             <a href="http://dashif.org/" target="_blank"><img class="image" src="app/img/if.png"/></a>
             <span id="big-title">Reference Client</span>
             <span ng-bind="version"></span>
-            <span id="commit-info"><!-- commit-info --></span>
-        </div>
+            <span id="commit-info"></span>
+        </div> -->
 
         <!-- Using iframe to solve pre-flight request issue from GIT-->
-        <div class="top-buttons">
+        <!-- <div class="top-buttons">
             <iframe id="star-button"
                     src="//ghbtns.com/github-btn.html?user=Dash-Industry-Forum&repo=dash.js&type=watch&count=true&size=large"
                     height="30" width="150">
@@ -91,7 +94,7 @@
                     src="//ghbtns.com/github-btn.html?user=Dash-Industry-Forum&repo=dash.js&type=fork&count=true&size=large"
                     height="30" width="150">
             </iframe>
-        </div>
+        </div> -->
     </div>
     <div class="row">
         <div class="input-group">
@@ -334,7 +337,7 @@
                     </div>
                 </div>
 
-                <div class="sub-options-item">
+                <!-- <div class="sub-options-item">
                     <div class="sub-options-item-title">Low-Latency</div>
                     <div class="sub-options-item-body">
                         <label data-toggle="tooltip" data-placement="right"
@@ -352,7 +355,10 @@
                             ABR Strategy: LoL+
                         </label>
                     </div>
-                </div>
+                </div> -->
+
+
+
                 <div class="sub-options-item">
                     <div class="sub-options-item-title">LL throughput calculation</div>
                     <div class="sub-options-item-body">
@@ -387,7 +393,7 @@
             </div>
         </div>
 
-        <div class="options-item">
+        <!-- <div class="options-item">
             <div class="options-item-title">DRM Options</div>
             <div class="options-item-body">
                 <form>
@@ -401,13 +407,11 @@
                         <label class="options-label">License URL:</label>
                         <input type="text" class="form-control" placeholder="" ng-model="drmPlayready.licenseServerUrl">
 
-                        <!-- Open Header Dialogue Window -->
                         <button id="playreadyRequestHeaderDialogueBtn" class="btn btn-primary"
                                 ng-click="openDialogue('playready')">
                             Add Request-Headers
                         </button>
 
-                        <!-- Header Dialogue Window Content -->
                         <div id="playreadyRequestHeaderDialogue" class="requestHeaderDialogue">
                             <div class="requestHeaderDialogueContent">
                                 <button class="close" ng-click="closeDialogue('playready')">&times;</button>
@@ -465,13 +469,12 @@
                         <label class="options-label">License URL:</label>
                         <input type="text" class="form-control" placeholder="" ng-model="drmWidevine.licenseServerUrl">
 
-                        <!-- Open Header Dialogue Window -->
                         <button id="widevineRequestHeaderDialogueBtn" class="btn btn-primary"
                                 ng-click="openDialogue('widevine')">
                             Add Request-Headers
                         </button>
 
-                        <!-- Header Dialogue Window Content -->
+
                         <div id="widevineRequestHeaderDialogue" class="requestHeaderDialogue">
                             <div class="requestHeaderDialogueContent">
                                 <button class="close" ng-click="closeDialogue('widevine')">&times;</button>
@@ -538,13 +541,11 @@
                                    ng-model="drmClearkey.licenseServerUrl">
                         </div>
 
-                        <!-- Open KID=KEY Dialogue Window -->
                         <button id="additionalClearkeysDialogueBtn" class="btn btn-primary dialogue-btn"
                                 ng-click="openDialogue('additionalClearkeys')">
                             Add additional clearkeys
                         </button>
 
-                        <!-- KID=KEY Dialogue Window Content -->
                         <div id="additionalClearkeysDialogue" class="requestHeaderDialogue">
                             <div class="requestHeaderDialogueContent">
                                 <button class="close" ng-click="closeDialogue('additionalClearkeys')">&times;</button>
@@ -582,13 +583,11 @@
                             </div>
                         </div>
 
-                        <!-- Open Header Dialogue Window -->
                         <button id="clearkeyRequestHeaderDialogueBtn" class="btn btn-primary"
                                 ng-click="openDialogue('clearkey')">
                             Add Request-Headers
                         </button>
 
-                        <!-- Header Dialogue Window Content -->
                         <div id="clearkeyRequestHeaderDialogue" class="requestHeaderDialogue">
                             <div class="requestHeaderDialogueContent">
                                 <button class="close" ng-click="closeDialogue('clearkey')">&times;</button>
@@ -675,7 +674,8 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
+        
         <div class="options-item">
             <div class="options-item-title">Live delay</div>
             <div class="options-item-body">
@@ -822,7 +822,7 @@
                 </label>
             </div>
         </div>
-        <div class="options-item">
+        <!-- <div class="options-item">
             <div class="options-item-title">CMCD</div>
             <div class="options-item-body">
                 <label class="topcoat-checkbox" data-toggle="tooltip" data-placement="right"
@@ -887,7 +887,7 @@
                 <input type="text" class="form-control" placeholder="weight ratio" ng-model="cmsdEtpWeightRatio"
                        ng-change="updateCmsdEtpWeightRatio()">
             </div>
-        </div>
+        </div> -->
 
     </div>
 
@@ -957,11 +957,11 @@
                 Click on "Copy Settings URL" on the top right and paste the URL in the address bar of your browser. The
                 current settings are compared to the default settings and the difference is stored using query parameters.
             </div>
-            <div class="bs-callout bs-callout-information">
+            <!-- <div class="bs-callout bs-callout-information">
                 <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
                 Additional samples can be found in the <a
                 href="../index.html" target="_blank">Sample Section</a>.
-            </div>
+            </div> -->
             <div>
                 <ul class="nav nav-tabs" role="tablist">
                     <li class="active">
@@ -1250,7 +1250,7 @@
 </div>
 
 <!-- FOOTER -->
-<div class="footer-area" ng-cloak>
+<!-- <div class="footer-area" ng-cloak>
     <div class="container">
         <div class="row">
             <div class="col-md-12">
@@ -1262,6 +1262,6 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 </body>
 </html>

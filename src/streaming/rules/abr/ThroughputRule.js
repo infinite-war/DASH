@@ -51,6 +51,9 @@ function ThroughputRule(config) {
     }
 
     function getMaxIndex(rulesContext) {
+
+        console.log('===================use throughputRule===================')
+
         const switchRequest = SwitchRequest(context).create();
 
         if (!rulesContext || !rulesContext.hasOwnProperty('getMediaInfo') || !rulesContext.hasOwnProperty('getMediaType') || !rulesContext.hasOwnProperty('useBufferOccupancyABR') ||

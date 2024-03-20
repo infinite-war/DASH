@@ -307,7 +307,7 @@ app.controller('DashController', ['$scope', '$window', 'sources', 'contributors'
     $scope.saveLastMediaSettingsSelected = true;
     $scope.localStorageSelected = true;
     $scope.jumpGapsSelected = true;
-    $scope.fastSwitchSelected = true;
+    $scope.fastSwitchSelected = false;
     $scope.applyServiceDescription = true;
     $scope.applyContentSteering = true;
     $scope.useSuggestedPresentationDelay = true;
@@ -566,12 +566,14 @@ app.controller('DashController', ['$scope', '$window', 'sources', 'contributors'
             }
         });
 
-        // 注册rules目录下的ABR算法
+        // 启用rules目录下的ABR算法
         if ($scope.customABRRulesSelected) {
+            // $scope.player.addABRCustomRule('qualitySwitchRules', 'CustomThroughputRule', CustomThroughputRule);   /* jshint ignore:line */
             $scope.player.addABRCustomRule('qualitySwitchRules', 'MultiMetricsRule', MultiMetricsRule);   /* jshint ignore:line */
             // $scope.player.addABRCustomRule('qualitySwitchRules', 'DownloadRatioRule', DownloadRatioRule); /* jshint ignore:line */
             // $scope.player.addABRCustomRule('qualitySwitchRules', 'ThroughputRule', CustomThroughputRule); /* jshint ignore:line */
         } else {
+            // $scope.player.remoteABRCustomRule('CustomThroughputRule');
             $scope.player.remoteABRCustomRule('MultiMetricsRule');
             // $scope.player.removeABRCustomRule('DownloadRatioRule');
             // $scope.player.removeABRCustomRule('ThroughputRule');
