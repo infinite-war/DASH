@@ -568,13 +568,15 @@ app.controller('DashController', ['$scope', '$window', 'sources', 'contributors'
 
         // 启用rules目录下的ABR算法
         if ($scope.customABRRulesSelected) {
-            // $scope.player.addABRCustomRule('qualitySwitchRules', 'CustomThroughputRule', CustomThroughputRule);   /* jshint ignore:line */
             $scope.player.addABRCustomRule('qualitySwitchRules', 'MultiMetricsRule', MultiMetricsRule);   /* jshint ignore:line */
+
+            // $scope.player.addABRCustomRule('qualitySwitchRules', 'CustomThroughputRule', CustomThroughputRule);   /* jshint ignore:line */
             // $scope.player.addABRCustomRule('qualitySwitchRules', 'DownloadRatioRule', DownloadRatioRule); /* jshint ignore:line */
             // $scope.player.addABRCustomRule('qualitySwitchRules', 'ThroughputRule', CustomThroughputRule); /* jshint ignore:line */
         } else {
-            // $scope.player.remoteABRCustomRule('CustomThroughputRule');
-            $scope.player.remoteABRCustomRule('MultiMetricsRule');
+            $scope.player.removeABRCustomRule('MultiMetricsRule');
+
+            // $scope.player.removeABRCustomRule('CustomThroughputRule');
             // $scope.player.removeABRCustomRule('DownloadRatioRule');
             // $scope.player.removeABRCustomRule('ThroughputRule');
         }
@@ -1904,7 +1906,7 @@ app.controller('DashController', ['$scope', '$window', 'sources', 'contributors'
 
     ////////////////////////////////////////
     //
-    // Metrics
+    // Metrics  统计因素相关
     //
     ////////////////////////////////////////
     $scope.initSession = function () {
@@ -1919,6 +1921,7 @@ app.controller('DashController', ['$scope', '$window', 'sources', 'contributors'
             mtp = {},
             etp = {};
 
+        // 提取最近4个符合要求的HTTP请求
         var requestWindow = requests.slice(-20).filter(function (req) {
             return req.responsecode >= 200 && req.responsecode < 300 && req.type === 'MediaSegment' && req._stream === type && !!req._mediaduration;
         }).slice(-4);
@@ -2004,21 +2007,22 @@ app.controller('DashController', ['$scope', '$window', 'sources', 'contributors'
                 var data = specificChart[name].data;
                 data.push([time, value]);
                 if (data.length > $scope.maxPointsToChart) {
-                    data.splice(0, 1);
+                    data.splice(0, 1);  // 添加的数据过多，则删除早期数据
                 }
             }
         }
     };
 
+    // 增/删统计值
     $scope.enableChartByName = function (id, type) {
-        // enable stat item
+        // 添加统计值
         if ($scope.chartState[type][id].selected) {
-            // block stat item if too many already.
-            if ($scope.chartData.length === $scope.maxChartableItems) {
-                alert('You have selected too many items to chart simultaneously. Max allowd is ' + $scope.maxChartableItems + '. Please unselect another item first, then reselected ' + $scope.chartState[type][id].label);
-                $scope.chartState[type][id].selected = false;
-                return;
-            }
+            // 统计数量限制
+            // if ($scope.chartData.length === $scope.maxChartableItems) {
+            //     alert('You have selected too many items to chart simultaneously. Max allowd is ' + $scope.maxChartableItems + '. Please unselect another item first, then reselected ' + $scope.chartState[type][id].label);
+            //     $scope.chartState[type][id].selected = false;
+            //     return;
+            // }
 
             var data = {
                 id: id,
@@ -2032,7 +2036,7 @@ app.controller('DashController', ['$scope', '$window', 'sources', 'contributors'
             $scope.chartOptions.yaxes.push({
                 axisLabel: data.label
             });
-        } else { //remove stat item from charts
+        } else { // 移除统计值
             for (var i = 0; i < $scope.chartData.length; i++) {
                 if ($scope.chartData[i].id === id && $scope.chartData[i].type === type) {
                     $scope.chartData.splice(i, 1);

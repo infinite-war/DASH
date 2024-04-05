@@ -9,6 +9,9 @@ function MultiMetricsRuleClass(){
     let DashMetrics = factory.getSingletonFactoryByName('DashMetrics');
     let DashManifestModel = factory.getSingletonFactoryByName('DashManifestModel');
     let StreamController = factory.getSingletonFactoryByName('StreamController');
+
+    let MediaPlayerModel = config.mediaPlayerModel;
+    let EventBus = EventBus(context).getInstance();
     
     let Debug = factory.getSingletonFactoryByName('Debug');
 
@@ -60,6 +63,7 @@ function MultiMetricsRuleClass(){
 		if(lastRequest.type !== 'MediaSegment' ) {
             return SwitchRequest(context).create();
         }
+
 		// 视频块传输时间
 		// trequest:客户端发送HTTP请求的时间点
 		// tresponse:客户端接收到HTTP相应的第一个字节的时间点
@@ -72,7 +76,7 @@ function MultiMetricsRuleClass(){
 		let throughput = chunkSzie / transmissionTime;
 		throughput = throughput / 1024;
 		console.log('视频块大小为:' +chunkSzie / 1024+'KB');
-		console.log(throughput+'KBps');
+		console.log('吞吐量：'+throughput+'KBps');
 		// 获取上一个视频块的码率级别
 		let lastQuality = rulesContext.getRepresentationInfo().quality;
 		console.log('获取码率级别'+lastQuality);

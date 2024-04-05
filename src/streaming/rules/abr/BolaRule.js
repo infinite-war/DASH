@@ -43,7 +43,7 @@ import Constants from '../../constants/Constants';
 
 // BOLA的三种状态
 // BOLA_STATE_ONE_BITRATE   : If there is only one bitrate (or initialization failed), always return NO_CHANGE.
-//                            特殊case，如仅有一个码率或者初始化失败
+//                            特殊情况，如仅有一个码率或者初始化失败
 // BOLA_STATE_STARTUP       : Set placeholder buffer such that we download fragments at most recently measured throughput.
 //                            默认初始状态，基于placeholder buffer进行码率决策
 // BOLA_STATE_STEADY        : Buffer primed, we switch to steady operation.
@@ -88,6 +88,7 @@ function BolaRule(config) {
         eventBus.on(Events.MEDIA_FRAGMENT_LOADED, onMediaFragmentLoaded, instance);
     }
 
+    // 接受一个包含比特率的数组作为参数，并返回一个新数组，其中每个元素是对应比特率的自然对数值
     function utilitiesFromBitrates(bitrates) {
         return bitrates.map(b => Math.log(b));
         // no need to worry about offset, utilities will be offset (uniformly) anyway later
@@ -95,6 +96,7 @@ function BolaRule(config) {
 
     // 计算BOLA相关参数，见 https://blog.csdn.net/LvGreat/article/details/130487156
     // NOTE: in live streaming, the real buffer level can drop below minimumBufferS, but bola should not stick to lowest bitrate by using a placeholder buffer level
+    // 在直播流中，实际缓冲级别可能会低于最小 BufferS，但 bola 不应该通过使用占位符缓冲级别来坚持最低比特率
     function calculateBolaParameters(stableBufferTime, bitrates, utilities) {
         const highestUtilityIndex = utilities.reduce((highestIndex, u, uIndex) => (u > utilities[highestIndex] ? uIndex : highestIndex), 0);
 
@@ -103,6 +105,7 @@ function BolaRule(config) {
             return null;
         }
 
+        // 计算实际缓冲时间
         const bufferTime = Math.max(stableBufferTime, MINIMUM_BUFFER_S + MINIMUM_BUFFER_PER_BITRATE_LEVEL_S * bitrates.length);
 
         // 代码中参数设置的逻辑是：使得BOLA可以在缓冲区水平为minimumBufferS时选择最低码率，
@@ -111,6 +114,8 @@ function BolaRule(config) {
         // If using Math.log utilities, we can choose Vp and gp to always prefer bitrates[0] at minimumBufferS and bitrates[max] at bufferTarget.
         // (Vp * (utility + gp) - bufferLevel) / bitrate has the maxima described when:
         // Vp * (utilities[0] + gp - 1) === minimumBufferS and Vp * (utilities[max] + gp - 1) === bufferTarget
+        // gp 是一个常数，用于调整缓冲区水平和效用值之间的关系；
+        // Vp 是一个常数，用于计算缓冲区水平应该达到的值。
         // giving:
         const gp = (utilities[highestUtilityIndex] - 1) / (bufferTime / MINIMUM_BUFFER_S - 1);
         const Vp = MINIMUM_BUFFER_S / gp;
@@ -157,6 +162,7 @@ function BolaRule(config) {
         bolaState.lastSegmentFinishTimeMs = NaN;
     }
 
+    // 检查 BOLA 状态的稳定缓冲时间是否需要调整
     // If the buffer target is changed (can this happen mid-stream?), then adjust BOLA parameters accordingly.
     function checkBolaStateStableBufferTime(bolaState, mediaType) {
         const stableBufferTime = mediaPlayerModel.getStableBufferTime();
@@ -168,12 +174,14 @@ function BolaRule(config) {
                 // 2. scale placeholder buffer by Vp subject to offset indicated in 1.
 
                 const bufferLevel = dashMetrics.getCurrentBufferLevel(mediaType);
+                // 有效缓冲级别
                 let effectiveBufferLevel = bufferLevel + bolaState.placeholderBuffer;
 
                 effectiveBufferLevel -= MINIMUM_BUFFER_S;
                 effectiveBufferLevel *= params.Vp / bolaState.Vp;
                 effectiveBufferLevel += MINIMUM_BUFFER_S;
 
+                // 更新 BOLA 状态中的稳定缓冲时间、Vp 和 gp 参数，以及占位缓冲
                 bolaState.stableBufferTime = stableBufferTime;
                 bolaState.Vp = params.Vp;
                 bolaState.gp = params.gp;
@@ -194,12 +202,18 @@ function BolaRule(config) {
         return bolaState;
     }
 
+    // 重点：根据当前缓冲水平来选择最适合的视频质量
     // The core idea of BOLA.
     function getQualityFromBufferLevel(bolaState, bufferLevel) {
         const bitrateCount = bolaState.bitrates.length;
+        // 视频质量级别
         let quality = NaN;
         let score = NaN;
         for (let i = 0; i < bitrateCount; ++i) {
+            // V_p 是 BOLA 参数中的一个常数
+            // utilities[i] 表示第 i 个比特率对应的效用值
+            // g_p 是 BOLA 参数中的另一个常数
+            // bitrates[i] 是第 i 个比特率的值
             let s = (bolaState.Vp * (bolaState.utilities[i] + bolaState.gp) - bufferLevel) / bolaState.bitrates[i];
             if (isNaN(score) || s >= score) {
                 score = s;
@@ -209,6 +223,7 @@ function BolaRule(config) {
         return quality;
     }
 
+    // 计算在特定质量级别下，系统最大允许的缓冲水平
     // maximum buffer level which prefers to download at quality rather than wait
     function maxBufferLevelForQuality(bolaState, quality) {
         return bolaState.Vp * (bolaState.utilities[quality] + bolaState.gp);
@@ -247,6 +262,7 @@ function BolaRule(config) {
      *    quality, then the buffer controller might decide not to download a segment. When dash.js is ready for the next
      *    segment, getMaxIndex() will be called again. We don't want this extra delay to factor in the bitrate decision.
      */
+    // 更新占位缓冲（placeholder buffer）。占位缓冲的作用是增加有效缓冲区的大小，以便在计算比特率时考虑下载时间等因素
     function updatePlaceholderBuffer(bolaState, mediaType) {
         const nowMs = Date.now();
 
@@ -268,6 +284,7 @@ function BolaRule(config) {
         checkBolaStateStableBufferTime(bolaState, mediaType);
     }
 
+    // 该函数用于处理当缓冲区为空时的事件。函数的主要目的是在重新缓冲时，防止占位缓冲（placeholder buffer）人为地提高 BOLA 的质量。
     function onBufferEmpty(e) {
         // if we rebuffer, we don't want the placeholder buffer to artificially raise BOLA quality
         const mediaType = e.mediaType;
@@ -280,6 +297,7 @@ function BolaRule(config) {
         }
     }
 
+    // 在播放器进行跳转操作时，重新设置相关的 BOLA 状态，以确保 BOLA 算法的正确运行
     function onPlaybackSeeking() {
         // TODO: 1. Verify what happens if we seek mid-fragment.
         // TODO: 2. If e.g. we have 10s fragments and seek, we might want to download the first fragment at a lower quality to restart playback quickly.
@@ -294,6 +312,7 @@ function BolaRule(config) {
         }
     }
 
+    // 处理当媒体片段加载完成时的事件
     function onMediaFragmentLoaded(e) {
         if (e && e.chunk && e.chunk.mediaInfo) {
             const bolaState = bolaStateDict[e.chunk.mediaInfo.type];
@@ -338,6 +357,8 @@ function BolaRule(config) {
      * not grow the actual buffer. Fast switching might cause the buffer to deplete, causing BOLA to drop the bitrate.
      * We avoid this by growing the placeholder buffer.
      */
+    // 检查新下载的片段，并根据不同情况调整占位缓冲
+    // 主要目的是使 BOLA 更加稳定，并避免在特定情况下缓冲区的不必要增长或缩减
     function checkNewSegment(bolaState, mediaType) {
         if (!isNaN(bolaState.lastSegmentStart) && !isNaN(bolaState.lastSegmentRequestTimeMs) && !isNaN(bolaState.placeholderBuffer)) {
             bolaState.placeholderBuffer *= PLACEHOLDER_BUFFER_DECAY;
@@ -468,6 +489,9 @@ function BolaRule(config) {
                 //     if the real buffer bufferLevel runs out, the placeholder buffer cannot prevent rebuffering.
                 //     However, the InsufficientBufferRule takes care of this scenario.
 
+                // 函数基于缓冲区水平和占位缓冲使用 BOLA 核心逻辑选择适当的质量级别，并根据 BOLA-O 策略避免振荡。
+                // 同时，函数还根据缓冲水平和占位缓冲计算出延迟时间，并告知调度控制器是否需要暂停加载。
+
                 updatePlaceholderBuffer(bolaState, mediaType);
 
                 // 稳定阶段基于BOLA-BASIC选择码率：getQualityFromBufferLevel（BOLA的核心决策逻辑，与论文一致，
@@ -477,6 +501,7 @@ function BolaRule(config) {
                 // BOLA-O 逻辑
                 // we want to avoid oscillations
                 // We implement the "BOLA-O" variant: when network bandwidth lies between two encoded bitrate levels, stick to the lowest level.
+                // 修改的BOLA-O逻辑：当网络带宽位于两个编码比特率级别之间时，坚持使用最低级别
                 const qualityForThroughput = abrController.getQualityForBitrate(mediaInfo, safeThroughput, streamId, latency);
                 if (quality > bolaState.lastQuality && quality > qualityForThroughput) {
                     // only intervene if we are trying to *increase* quality to an *unsustainable* level
@@ -487,9 +512,12 @@ function BolaRule(config) {
 
                 // We do not want to overfill buffer with low quality chunks.
                 // Note that there will be no delay if buffer level is below MINIMUM_BUFFER_S, probably even with some margin higher than MINIMUM_BUFFER_S.
+                // 计算需要的延迟时间，确保缓冲区不会过度填充
+                // 这里比较了缓冲区水平和占位缓冲加上当前选择的质量级别对应的最大缓冲水平，取其差值作为延迟时间
                 let delayS = Math.max(0, bufferLevel + bolaState.placeholderBuffer - maxBufferLevelForQuality(bolaState, quality));
 
                 // First reduce placeholder buffer, then tell schedule controller to pause.
+                // 减少占位符缓冲区，然后告诉调度控制器暂停。
                 if (delayS <= bolaState.placeholderBuffer) {
                     bolaState.placeholderBuffer -= delayS;
                     delayS = 0;
@@ -535,15 +563,17 @@ function BolaRule(config) {
         bolaStateDict = {};
     }
 
+    // 重置播放器实例的状态
     function reset() {
         resetInitialSettings();
-
+        // 移除了一系列事件监听器。这些监听器包括了处理缓冲区为空、播放跳转、指标添加、质量变更请求、片段加载放弃等事件的处理函数。
         eventBus.off(MediaPlayerEvents.BUFFER_EMPTY, onBufferEmpty, instance);
         eventBus.off(MediaPlayerEvents.PLAYBACK_SEEKING, onPlaybackSeeking, instance);
         eventBus.off(MediaPlayerEvents.METRIC_ADDED, onMetricAdded, instance);
         eventBus.off(MediaPlayerEvents.QUALITY_CHANGE_REQUESTED, onQualityChangeRequested, instance);
         eventBus.off(MediaPlayerEvents.FRAGMENT_LOADING_ABANDONED, onFragmentLoadingAbandoned, instance);
 
+        // 移除了片段加载完成事件的监听器
         eventBus.off(Events.MEDIA_FRAGMENT_LOADED, onMediaFragmentLoaded, instance);
     }
 

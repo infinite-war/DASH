@@ -951,12 +951,12 @@
             <div class="bs-callout bs-callout-danger" id="http-warning-container" style="display: none;">
                 <span id="http-warning-text"></span>
             </div>
-            <div class="bs-callout bs-callout-warning">
+            <!-- <div class="bs-callout bs-callout-warning">
                 <h5><span class="label label-warning" style="margin-right:3px">Updated</span>Export settings</h5>
                 Our export settings feature creates shorter URLs now.
                 Click on "Copy Settings URL" on the top right and paste the URL in the address bar of your browser. The
                 current settings are compared to the default settings and the difference is stored using query parameters.
-            </div>
+            </div> -->
             <!-- <div class="bs-callout bs-callout-information">
                 <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
                 Additional samples can be found in the <a
@@ -985,7 +985,8 @@
                                        ng-change="enableChartByName('buffer', 'video')">
                                 <label class="text-primary" for="videoBufferCB" data-toggle="tooltip"
                                        data-placement="top"
-                                       title="The length of the forward buffer, in seconds">Buffer Length : </label> {{videoBufferLength}}
+                                       title="先前的缓冲区的长度，以秒为单位">Buffer Length : </label> {{videoBufferLength}}
+                                       <!-- The length of the forward buffer, in seconds -->
                             </div>
 
                             <div class="text-success">
@@ -993,8 +994,9 @@
                                        ng-change="enableChartByName('bitrate', 'video')">
                                 <label class="text-primary" for="videoBitrateCB" data-toggle="tooltip"
                                        data-placement="top"
-                                       title="The bitrate of the representation being downloaded">Bitrate Downloading
+                                       title="当前下载的比特率">Bitrate Downloading
                                     :</label> {{videoBitrate}} kbps
+                                    <!-- The bitrate of the representation being downloaded -->
                             </div>
 
                             <div class="text-success">
@@ -1003,8 +1005,9 @@
                                        ng-change="enableChartByName('pendingIndex', 'video')">
                                 <label class="text-primary" for="videoPendingIndexCB" data-toggle="tooltip"
                                        data-placement="top"
-                                       title="The representation index being downloaded and appended to the buffer">Index
+                                       title="正在下载并附加到缓冲区的视频切片索引">Index
                                     Downloading :</label> {{videoPendingIndex}} / {{videoPendingMaxIndex}}
+                                    <!-- The representation index being downloaded and appended to the buffer -->
                             </div>
                             <div class="text-success">
                                 <input id="videoIndexCB" type="checkbox" ng-model="chartState.video.index.selected"
@@ -1020,16 +1023,18 @@
                                        ng-change="enableChartByName('droppedFPS', 'video')">
                                 <label class="text-primary" for="videoDroppedFramesCB" data-toggle="tooltip"
                                        data-placement="top"
-                                       title="The absolute count of frames dropped by the rendering pipeline since play commenced">Dropped
+                                       title="自播放开始以来渲染管道丢弃的帧的数量">Dropped
                                     Frames :</label> {{videoDroppedFrames}}
+                                    <!-- The absolute count of frames dropped by the rendering pipeline since play commenced -->
                             </div>
                             <div class="text-success">
                                 <input id="videoLatencyCB" type="checkbox" ng-model="chartState.video.latency.selected"
                                        ng-change="enableChartByName('latency', 'video')">
                                 <label class="text-primary" for="videoLatencyCB" data-toggle="tooltip"
                                        data-placement="top"
-                                       title="The minimum, average and maximum latency over the last 4 requested segments. Latency is the time in seconds from request of segment to receipt of first byte">Latency
+                                       title="最后 4 个请求段的最小、平均和最大延迟。 延迟指从请求段到收到第一个字节的时间（以秒为单位）">Latency
                                     (min|avg|max) :</label> {{videoLatency}}
+                                    <!-- The minimum, average and maximum latency over the last 4 requested segments. Latency is the time in seconds from request of segment to receipt of first byte -->
                             </div>
                             <div class="text-success">
                                 <input id="videoDownloadCB" type="checkbox"
@@ -1037,16 +1042,18 @@
                                        ng-change="enableChartByName('download', 'video')">
                                 <label class="text-primary" for="videoDownloadCB" data-toggle="tooltip"
                                        data-placement="top"
-                                       title="The minimum, average and maximum download time for the last 4 requested segments. Download time is the time in seconds from first byte being received to the last byte">Download
+                                       title="最后 4 个请求段的最短、平均和最长下载时间。 下载时间指从接收到第一个字节到最后一个字节的时间（以秒为单位）">Download
                                     (min|avg|max) :</label> {{videoDownload}}
+                                    <!-- The minimum, average and maximum download time for the last 4 requested segments. Download time is the time in seconds from first byte being received to the last byte -->
                             </div>
                             <div class="text-success">
                                 <input id="videoRatioCB" type="checkbox" ng-model="chartState.video.ratio.selected"
                                        ng-change="enableChartByName('ratio', 'video')">
                                 <label class="text-primary" for="videoRatioCB" data-toggle="tooltip"
                                        data-placement="top"
-                                       title="The minimum, average and maximum ratio of the segment playback time to total download time over the last 4 segments">Ratio
+                                       title="最近 4 个片段的片段播放时间与总下载时间的最小、平均和最大比率">Ratio
                                     (min|avg|max) :</label> {{videoRatio}}
+                                    <!-- The minimum, average and maximum ratio of the segment playback time to total download time over the last 4 segments -->
                             </div>
                             <div class="text-success" ng-show="isCMSDEnabled()">
                                 <input id="mtpCB" type="checkbox"
@@ -1233,7 +1240,7 @@
     </div>
 
     <!-- Conformance violations -->
-    <div class="row">
+    <!-- <div class="row">
         <div class="col-md-12 conformance-violations-panel">
             <div id="conformance-violations">
                 <h4>Conformance Violations </h4>
@@ -1244,7 +1251,7 @@
                 </ul>
             </div>
         </div>
-    </div>
+    </div> -->
 
 
 </div>
