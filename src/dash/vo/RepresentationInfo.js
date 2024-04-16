@@ -35,12 +35,13 @@
 class RepresentationInfo {
     constructor() {
         this.id = null;
-        this.quality = null;                // 媒体表示的质量等级
-        this.fragmentDuration = null;       // 媒体片段长度
+        this.quality = null; // 媒体表示的质量等级
+        this.fragmentDuration = null; // 媒体片段长度
         this.mediaInfo = null;              
-        this.MSETimeOffset = null;          /** 表示媒体片段的时间偏移量。
-                                            在使用媒体源扩展（Media Source Extensions，MSE）时，
-                                            此属性可能会用于指定媒体片段在时间轴上的偏移量。 */
+        // 表示媒体片段的时间偏移量。
+        // 在使用媒体源扩展（Media Source Extensions，MSE）时，
+        // 此属性可能会用于指定媒体片段在时间轴上的偏移量。
+        this.MSETimeOffset = null;          
     }
 }
 

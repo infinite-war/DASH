@@ -38,12 +38,13 @@
 class ProducerReferenceTime {
     constructor() {
         this.id = null;
-        this.inband = false;            /** 生产者参考时间是否以内嵌方式包含在媒体流中。
-                                            如果为 true，则表示生产者参考时间以内嵌方式传输；
-                                            如果为 false，则表示生产者参考时间以外部方式传输 */
+        // 生产者参考时间是否以内嵌方式包含在媒体流中。
+        // 如果为 true，则表示生产者参考时间以内嵌方式传输；
+        // 如果为 false，则表示生产者参考时间以外部方式传输 
+        this.inband = false; 
         this.type = 'encoder';
-        this.applicationScheme = null;  // 生产者参考时间的应用方案
-        this.wallClockTime = null;      // 表示生成时间点的实际时间
+        this.applicationScheme = null; // 生产者参考时间的应用方案
+        this.wallClockTime = null; // 表示生成时间点的实际时间
         this.presentationTime = NaN;
         this.UTCTiming = null;
     }
