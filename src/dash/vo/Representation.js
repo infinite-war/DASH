@@ -29,7 +29,7 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  */
 /**
- * @class
+ * @class MPD结构下的Representation层
  * @ignore
  */
 
@@ -39,30 +39,31 @@ class Representation {
     constructor() {
         this.id = null;
         this.index = -1;
-        this.adaptation = null;
+        this.adaptation = null;             // 该表示形式所属的适配集合（AdaptationSet），通常是一个对象的引用
         this.segmentInfoType = null;
         this.initialization = null;
-        this.codecs = null;
-        this.mimeType = null;
-        this.codecPrivateData = null;
-        this.segmentDuration = NaN;
-        this.timescale = 1;
-        this.startNumber = 1;
+        this.codecs = null;                 // 使用的编解码器
+        this.mimeType = null;               // 媒体类型
+        this.codecPrivateData = null;       // 该表示形式的编解码器私有数据
+        this.segmentDuration = NaN;         
+        this.timescale = 1;                 // 时间标度/单位
+        this.startNumber = 1;               // 段序列的起始编号
         this.indexRange = null;
         this.range = null;
         this.presentationTimeOffset = 0;
         // Set the source buffer timeOffset to this
-        this.MSETimeOffset = NaN;
+        this.MSETimeOffset = NaN;           // 媒体缓冲器（Media Source Extensions）的时间偏移
         // The information we need in the DashHandler to determine whether the last segment has been loaded
-        this.mediaFinishedInformation = { numberOfSegments: 0, mediaTimeOfLastSignaledSegment: NaN };
-        this.bandwidth = NaN;
+        // 媒体完成信息，包括段数和最后一个已加载段的媒体时间
+        this.mediaFinishedInformation = { numberOfSegments: 0, mediaTimeOfLastSignaledSegment: NaN };  
+        this.bandwidth = NaN;               // 该表示形式的带宽
         this.width = NaN;
         this.height = NaN;
         this.scanType = null;
-        this.maxPlayoutRate = NaN;
-        this.availabilityTimeOffset = 0;
-        this.availabilityTimeComplete = true;
-        this.frameRate = null;
+        this.maxPlayoutRate = NaN;          // 最大播放速率
+        this.availabilityTimeOffset = 0;    // 可用时间的偏移量
+        this.availabilityTimeComplete = true; // 可用时间是否完整
+        this.frameRate = null;              // 视频的帧率
     }
 
     hasInitialization() {

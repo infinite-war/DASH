@@ -29,7 +29,7 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  */
 /**
- * @class
+ * @class   MPD结构中的Period层
  * @ignore
  */
 class Period {

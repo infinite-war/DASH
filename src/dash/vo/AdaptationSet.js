@@ -29,7 +29,7 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  */
 /**
- * @class
+ * @class 
  * @ignore
  */
 class AdaptationSet {

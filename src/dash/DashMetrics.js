@@ -160,6 +160,7 @@ function DashMetrics(config) {
 
     /**
      * Returns the latest HTTP request for a given media type
+     * 获取最近一个同媒体类型的HTTP请求
      * @param {MediaType} mediaType
      * @returns {*}
      * @memberof module:DashMetrics

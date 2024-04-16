@@ -29,14 +29,15 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  */
 /**
+ * 表示对MPD文件中的元素进行修改的操作
  * @class
  * @ignore
  */
 class PatchOperation {
     constructor(action, xpath, value) {
         this.action = action;
-        this.xpath = xpath;
-        this.value = value;
+        this.xpath = xpath; // MPD路径
+        this.value = value; // 要应用的值
         this.position = null;
     }
 

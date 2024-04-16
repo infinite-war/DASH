@@ -28,17 +28,19 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *  POSSIBILITY OF SUCH DAMAGE.
  */
-/**
- * @class
+/**  
+ * @class 媒体信息表示类
  * @ignore
  */
 class RepresentationInfo {
     constructor() {
         this.id = null;
-        this.quality = null;
-        this.fragmentDuration = null;
-        this.mediaInfo = null;
-        this.MSETimeOffset = null;
+        this.quality = null;                // 媒体表示的质量等级
+        this.fragmentDuration = null;       // 媒体片段长度
+        this.mediaInfo = null;              
+        this.MSETimeOffset = null;          /** 表示媒体片段的时间偏移量。
+                                            在使用媒体源扩展（Media Source Extensions，MSE）时，
+                                            此属性可能会用于指定媒体片段在时间轴上的偏移量。 */
     }
 }
 

@@ -29,16 +29,21 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  */
 /**
+ * 表示生产者参考时间（Producer Reference Time）。
+ * 生产者参考时间是指视频编码器或其他媒体生产设备生成的时间戳，
+ * 用于标记媒体内容中的特定事件或时间点
  * @class
  * @ignore
  */
 class ProducerReferenceTime {
     constructor() {
         this.id = null;
-        this.inband = false;
+        this.inband = false;            /** 生产者参考时间是否以内嵌方式包含在媒体流中。
+                                            如果为 true，则表示生产者参考时间以内嵌方式传输；
+                                            如果为 false，则表示生产者参考时间以外部方式传输 */
         this.type = 'encoder';
-        this.applicationScheme = null;
-        this.wallClockTime = null;
+        this.applicationScheme = null;  // 生产者参考时间的应用方案
+        this.wallClockTime = null;      // 表示生成时间点的实际时间
         this.presentationTime = NaN;
         this.UTCTiming = null;
     }

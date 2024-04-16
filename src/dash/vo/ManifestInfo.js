@@ -29,20 +29,20 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  */
 /**
- * @class
+ * @class  媒体清单信息
  * @ignore
  */
 class ManifestInfo {
     constructor() {
-        this.dvrWindowSize = NaN;
-        this.loadedTime = null;
-        this.availableFrom = null;
-        this.minBufferTime = NaN;
-        this.duration = NaN;
-        this.isDynamic = false;
-        this.maxFragmentDuration = null;
+        this.dvrWindowSize = NaN;           // 动态录制窗口的大小，通常是一个数字。动态录制窗口是指在直播流中，可以向后回溯的时间范围
+        this.loadedTime = null;             // 媒体清单加载完成的时间，通常是一个日期对象或 null
+        this.availableFrom = null;          // 媒体清单中内容的有效开始时间
+        this.minBufferTime = NaN;           // 播放器至少需要的缓冲时间
+        this.duration = NaN;                // 媒体清单中内容的总时长
+        this.isDynamic = false;             // 媒体清单是否是动态的，即是否是实时更新的
+        this.maxFragmentDuration = null;    // 最大片段持续时间
         this.serviceDescriptions = [];
-        this.protocol = null;
+        this.protocol = null;               // 用到的协议
     }
 }
 

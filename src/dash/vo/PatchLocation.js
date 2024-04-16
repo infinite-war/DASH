@@ -29,10 +29,13 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  */
 /**
+ * 表示一个修补（Patch）位置。
+ * 修补位置通常用于在内容传输过程中对媒体数据或媒体清单进行临时性修改或修正
  * @class
  * @ignore
  */
 class PatchLocation {
+    // ttl: 表示修补位置的生存时间（Time-To-Live）
     constructor(url, serviceLocation, ttl) {
         this.url = url || '';
         this.serviceLocation = serviceLocation || null;

@@ -29,7 +29,7 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  */
 /**
- * @class
+ * @class  媒体段(MPD的一部分)
  * @ignore
  */
 class Segment {
@@ -41,20 +41,27 @@ class Segment {
         this.media = null;
         this.duration = NaN;
         // this is the time that should be inserted into the media url
+        // 应该插入媒体 URL 中的时间
         this.replacementTime = null;
         // this is the number that should be inserted into the media url
+        // 应该插入媒体 URL 中的编号
         this.replacementNumber = NaN;
         // This is supposed to match the time encoded in the media Segment
         this.mediaStartTime = NaN;
         // When the source buffer timeOffset is set to MSETimeOffset this is the
         // time that will match the seekTarget and video.currentTime
+        // 当源缓冲区 timeOffset 设置为 MSETimeOffset 时，
+        // 该时间将与seekTarget、video.currentTime 匹配
         this.presentationStartTime = NaN;
         // Do not schedule this segment until
+        // 该段的可用开始时间，即在此时间之前不应安排此段
         this.availabilityStartTime = NaN;
         // Ignore and  discard this segment after
+        // 该段的可用结束时间，即在此时间之后应忽略和丢弃此段
         this.availabilityEndTime = NaN;
         // For dynamic mpd's, this is the wall clock time that the video
         // element currentTime should be presentationStartTime
+        // 对于动态 mpd，这是视频元素 currentTime 应为presentationStartTime 的挂钟时间
         this.wallStartTime = NaN;
         this.representation = null;
     }

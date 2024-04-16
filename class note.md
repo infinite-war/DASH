@@ -35,8 +35,9 @@
 ```bash
 
 ├── DashAdapter.js
-├── DashHandler.js
-├── DashMetrics.js
+├── DashHandler.js                  // 重要：Dash处理器，用于处理DASH流的请求和段
+├── DashMetrics.js                  // 重要：获取/修改一些播放过程中的影响因素
+|                                   // (具体见549行列出的方法)
 ├── SegmentBaseLoader.js
 ├── WebmSegmentBaseLoader.js
 |

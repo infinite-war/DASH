@@ -51,7 +51,7 @@ function DashHandler(config) {
     const debug = config.debug;
     const urlUtils = config.urlUtils;
     const type = config.type;
-    const streamInfo = config.streamInfo;
+    const streamInfo = config.streamInfo; // 音视频流信息
     const segmentsController = config.segmentsController;
     const timelineConverter = config.timelineConverter;
     const baseURLController = config.baseURLController;
@@ -188,6 +188,7 @@ function DashHandler(config) {
         }
     }
 
+    // 检查是否请求了最后一个段
     function isLastSegmentRequested(representation, bufferingTime) {
         if (!representation || !lastSegment) {
             return false;
@@ -252,6 +253,7 @@ function DashHandler(config) {
 
     /**
      * This function returns the next segment request without modifying any internal variables. Any class (e.g CMCD Model) that needs information about the upcoming request should use this method.
+     * 获取下一个段请求，不修改任何内部变量
      * @param {object} mediaInfo
      * @param {object} representation
      * @return {FragmentRequest|null}
@@ -319,6 +321,7 @@ function DashHandler(config) {
     /**
      * This function returns a time larger than the current time for which we can generate a request.
      * This is useful in scenarios in which the user seeks into a gap in a dynamic Timeline manifest. We will not find a valid request then and need to adjust the seektime.
+     * 在动态时间线(manifest)中找到一个有效的时间点，以便准确地生成请求
      * @param {number} time
      * @param {object} mediaInfo
      * @param {object} representation
@@ -398,6 +401,7 @@ function DashHandler(config) {
         return lastSegment ? lastSegment.index : -1;
     }
 
+    // 播放完成
     function _onDynamicToStatic() {
         logger.debug('Dynamic stream complete');
         mediaHasFinished = true;
