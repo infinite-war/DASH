@@ -140,6 +140,7 @@ function HTTPLoader(cfg) {
             }
         };
 
+        // 当请求结束时触发, 无论请求成功(load)还是失败(abort或error)。
         const onloadend = function () {
             if (progressTimeout) {
                 clearTimeout(progressTimeout);
@@ -201,6 +202,7 @@ function HTTPLoader(cfg) {
             }
         };
 
+        // 接收数据开始周期触发。
         const progress = function (event) {
             const currentTime = new Date();
 
@@ -248,6 +250,7 @@ function HTTPLoader(cfg) {
             }
         };
 
+        // XMLHttpRequest请求成功完成时触发。
         const onload = function () {
             if (httpRequest.response.status >= 200 && httpRequest.response.status <= 299) {
                 handleLoaded(true);
@@ -262,6 +265,7 @@ function HTTPLoader(cfg) {
             }
         };
 
+        // 当 request 被停止时触发，例如当程序调用 XMLHttpRequest.abort() 时。
         const onabort = function () {
             addHttpRequestMetric(true);
 
@@ -390,7 +394,7 @@ function HTTPLoader(cfg) {
         }
     }
 
-    /**
+    /** 初始化一个下载任务
      * Initiates a download of the resource described by config.request
      * @param {Object} config - contains request (FragmentRequest or derived type), and callbacks
      * @memberof module:HTTPLoader

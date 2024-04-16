@@ -199,6 +199,7 @@ function FragmentModel(config) {
         loadingRequests = [];
     }
 
+    // 发送请求
     function executeRequest(request) {
         switch (request.action) {
             case FragmentRequest.ACTION_DOWNLOAD:
@@ -216,7 +217,7 @@ function FragmentModel(config) {
             { request: request },
             { streamId: streamInfo.id, mediaType: type }
         );
-        fragmentLoader.load(request);
+        fragmentLoader.load(request); // FragmentLoader.js
     }
 
     function getRequestForTime(arr, time, threshold) {

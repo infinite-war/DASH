@@ -2,6 +2,9 @@
 
 **官方现有的类图见\docs目录**
 
+
+[可参考博客1](https://soo-q6.github.io/blog/2019-12-27-dashjs/)
+
 ## Core 目录
 
 包含对象管理、日志管理、异常信息、事件信息、基础配置等功能
@@ -29,6 +32,8 @@
 
 
 ## dash目录
+
+MPEG-DASH规范的实现
 
 包含dash相关的实体类、解析器
 
@@ -107,25 +112,6 @@
 ```
 
 
-## mss目录
-
-包含
-
-```bash
-
-├── MssFragmentInfoController.js
-├── MssFragmentMoofProcessor.js
-├── MssFragmentMoovProcessor.js
-├── MssFragmentProcessor.js
-├── MssHandler.js
-├── errors
-│   └── MssErrors.js
-├── index.js
-└── parser
-    └── MssParser.js
-
-```
-
 ## offline目录
 
 包含
@@ -162,7 +148,7 @@
 
 ## streaming目录
 
-包含视频流处理、
+流传输相关的内容，包括调度逻辑、ABR规则、系统运行逻辑、网络请求、播放器状态等
 
 
 ``` bash
@@ -190,7 +176,7 @@
 │   ├── AbrController.js
 │   ├── BaseURLController.js
 │   ├── BlacklistController.js
-│   ├── BufferController.js
+│   ├── BufferController.js         // 缓冲区管理
 │   ├── CatchupController.js
 │   ├── EventController.js
 │   ├── FragmentController.js
@@ -198,7 +184,7 @@
 │   ├── MediaController.js
 │   ├── MediaSourceController.js
 │   ├── PlaybackController.js
-│   ├── ScheduleController.js
+│   ├── ScheduleController.js       // 播放器调度
 │   ├── StreamController.js
 │   ├── TimeSyncController.js
 │   └── XlinkController.js
@@ -238,7 +224,7 @@
 │   ├── CmcdModel.js
 │   ├── CmsdModel.js
 │   ├── CustomParametersModel.js
-│   ├── FragmentModel.js
+│   ├── FragmentModel.js                // 涉及HTTP请求发送
 │   ├── LowLatencyThroughputModel.js
 │   ├── ManifestModel.js
 │   ├── MediaPlayerModel.js             // 获取播放速率、重试间隔、缓冲时长/水平等信息
@@ -247,7 +233,7 @@
 │   └── VideoModel.js
 ├── net
 │   ├── FetchLoader.js
-│   ├── HTTPLoader.js
+│   ├── HTTPLoader.js                   // 处理下载等请求
 │   ├── SchemeLoaderFactory.js
 │   ├── URLLoader.js
 │   └── XHRLoader.js
@@ -297,7 +283,8 @@
 │   ├── SwitchRequestHistory.js         //决策结果历史记录
 │   ├── ThroughputHistory.js
 │   └── abr                             //已有的ABR算法
-│       ├── ABRRulesCollection.js
+│       ├── ABRRulesCollection.js       // 管理各个ABRrules，包括确定哪些rules是生效的，
+|                                       // 以及从已经生效的rule中选择“合适”的码率作为结果
 │       ├── AbandonRequestsRule.js
 │       ├── BolaRule.js
 │       ├── DroppedFramesRule.js
@@ -373,5 +360,28 @@
         ├── SchedulingInfo.js
         └── TCPConnection.js
 
+
+```
+
+
+
+
+## mss目录(不重要)
+
+包含音视频处理功能。
+MicroSoft Smooth Streaming相关的代码。
+
+```bash
+
+├── MssFragmentInfoController.js
+├── MssFragmentMoofProcessor.js
+├── MssFragmentMoovProcessor.js
+├── MssFragmentProcessor.js
+├── MssHandler.js
+├── errors
+│   └── MssErrors.js
+├── index.js
+└── parser
+    └── MssParser.js
 
 ```

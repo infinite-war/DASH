@@ -134,6 +134,7 @@ function ScheduleController(config) {
 
     /**
      * Schedule the request for an init or a media segment
+     * 播放器调度规则。涉及HTTP请求发送
      */
     function schedule() {
         try {
@@ -144,10 +145,12 @@ function ScheduleController(config) {
             }
 
             if (_shouldScheduleNextRequest()) {
-                let qualityChange = false;
+                let qualityChange = false; // 是否需要更改播放质量
                 if (checkPlaybackQuality) {
                     // in case the playback quality is supposed to be changed, the corresponding StreamProcessor will update the currentRepresentation.
                     // The StreamProcessor will also start the schedule timer again once the quality switch has beeen prepared. Consequently, we only call _getNextFragment if the quality is not changed.
+                    // 如果检查到播放质量需要更改，那么对应的 StreamProcessor 将会更新当前的表示形式（representation）。
+                    // 然后，重新启动调度计时器
                     qualityChange = abrController.checkPlaybackQuality(type, streamInfo.id);
                 }
                 if (!qualityChange) {
@@ -155,6 +158,7 @@ function ScheduleController(config) {
                 }
 
             } else {
+                // 则根据当前是否启用低延迟模式来启动调度计时器，并根据相应的超时值进行调度
                 startScheduleTimer(playbackController.getLowLatencyModeEnabled() ? settings.get().streaming.scheduling.lowLatencyTimeout : settings.get().streaming.scheduling.defaultTimeout);
             }
         } catch (e) {
