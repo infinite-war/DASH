@@ -62,6 +62,7 @@ function MediaPlayerModel() {
         logger = Debug(context).getInstance().getLogger(instance);
     }
 
+    // 设置播放控制器和服务描述控制器
     function setConfig(config) {
         if (config.playbackController) {
             playbackController = config.playbackController;
@@ -73,6 +74,7 @@ function MediaPlayerModel() {
 
     /**
      * Checks the supplied min playback rate is a valid vlaue and within supported limits
+     * 检查最小播放速率是否有效，并在必要时进行纠正
      * @param {number} rate - Supplied min playback rate 
      * @param {boolean} log - wether to shown warning or not 
      * @returns {number} corrected min playback rate
@@ -96,6 +98,7 @@ function MediaPlayerModel() {
 
     /**
      * Checks the supplied max playback rate is a valid vlaue and within supported limits
+     * 检查最大播放速率是否有效，并在必要时进行纠正
      * @param {number} rate - Supplied max playback rate 
      * @param {boolean} log - wether to shown warning or not 
      * @returns {number} corrected max playback rate
@@ -119,6 +122,7 @@ function MediaPlayerModel() {
 
     /**
      * Returns the maximum drift allowed before applying a seek back to the live edge when the catchup mode is enabled
+     * 获取启用时的最大偏移量
      * @return {number}
      */
     function getCatchupMaxDrift() {
@@ -137,6 +141,7 @@ function MediaPlayerModel() {
     /**
      * Returns the minimum and maximum playback rates to be used when applying the catchup mechanism
      * If only one of the min/max values has been set then the other will default to 0 (no playback rate change).
+     * 获取追赶模式下的最小和最大播放速率
      * @return {number}
      */
     function getCatchupPlaybackRates(log) {
@@ -166,6 +171,7 @@ function MediaPlayerModel() {
 
     /**
      * Returns whether the catchup mode is activated via the settings or internally in the PlaybackController
+     * 是否启用了追赶模式
      * @return {boolean}
      */
     function getCatchupModeEnabled() {
@@ -178,6 +184,7 @@ function MediaPlayerModel() {
 
     /**
      * Returns the min,max or initial bitrate for a specific media type.
+     * 获取特定媒体类型的初始、最小或最大比特率
      * @param {string} field
      * @param {string} mediaType
      */
@@ -202,6 +209,7 @@ function MediaPlayerModel() {
 
     /**
      * Returns the initial buffer level taking the stable buffer time into account
+     * 获取初始缓冲级别
      * @return {number}
      */
     function getInitialBufferLevel() {
@@ -216,6 +224,7 @@ function MediaPlayerModel() {
 
     /**
      * Returns the stable buffer time taking the live delay into account
+     * 获取稳定缓冲时间
      * @return {number}
      */
     function getStableBufferTime() {
@@ -227,6 +236,7 @@ function MediaPlayerModel() {
 
     /**
      * Returns the number of retry attempts for a specific media type
+     * 获取特定媒体类型的重试尝试次数
      * @param type
      * @return {number}
      */
@@ -238,6 +248,7 @@ function MediaPlayerModel() {
 
     /**
      * Returns the retry interval for a specific media type
+     * 获取特定媒体类型的重试间隔
      * @param type
      * @return {number}
      */

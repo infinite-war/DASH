@@ -57,6 +57,7 @@ const FactoryMaker = (function () {
         }
     }
 
+    // 获取单例对象
     /**
      * Use this method from your extended object.  this.factory is injected into your object.
      * this.factory.getSingletonInstance(this.context, 'VideoModel')
@@ -79,6 +80,7 @@ const FactoryMaker = (function () {
         return null;
     }
 
+    // 添加单例对象
     /**
      * Use this method to add an singleton instance to the system.  Useful for unit testing to mock objects etc.
      *

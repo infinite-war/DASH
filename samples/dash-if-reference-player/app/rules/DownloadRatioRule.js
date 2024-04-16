@@ -175,7 +175,7 @@ function DownloadRatioRuleClass() {
         } else {
             for (i = count - 1; i > current; i -= 1) {
                 if (calculatedBandwidth > (bandwidths[i] * switchUpRatioSafetyFactor)) {
-                    // logger.debug("[CustomRules][" + mediaType + "][DownloadRatioRule] bw = " + calculatedBandwidth + " results[i] * switchUpRatioSafetyFactor =" + (bandwidths[i] * switchUpRatioSafetyFactor) + " with i=" + i);
+                    logger.debug("[CustomRules][" + mediaType + "][DownloadRatioRule] bw = " + calculatedBandwidth + " results[i] * switchUpRatioSafetyFactor =" + (bandwidths[i] * switchUpRatioSafetyFactor) + " with i=" + i);
                     break;
                 }
             }

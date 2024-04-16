@@ -38,6 +38,8 @@ import path from 'path-browserify'
 import { UAParser } from 'ua-parser-js'
 
 class Utils {
+    // 将源对象中的属性混合到目标对象中，如果属性存在于目标对象中，则将源对象的属性值复制到目标对象中。
+    // 如果属性是对象类型，则递归地混合其属性。参数 copy 是一个函数，用于复制属性值。
     static mixin(dest, source, copy) {
         let s;
         let empty = {};
@@ -58,6 +60,7 @@ class Utils {
         return dest;
     }
 
+    // 深拷贝
     static clone(src) {
         if (!src || typeof src !== 'object') {
             return src; // anything
@@ -77,6 +80,7 @@ class Utils {
         return Utils.mixin(r, src, Utils.clone);
     }
 
+    // 向 URL 添加额外的查询参数，并返回修改后的 URL。参数 params 是一个包含要添加的参数键值对的数组。
     static addAditionalQueryParameterToUrl(url, params) {
         try {
             if (!params || params.length === 0) {
@@ -99,6 +103,7 @@ class Utils {
         }
     }
 
+    // 解析 HTTP 头字符串，并返回一个包含键值对的对象
     static parseHttpHeaders(headerStr) {
         let headers = {};
         if (!headerStr) {

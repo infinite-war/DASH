@@ -40,24 +40,27 @@ class QoeInfo {
         this.type = null;
 
         // Store lastBitrate for calculation of bitrateSwitchWSum
+        // 计算比特率切换的加权和的最后一个比特率
         this.lastBitrate = null;
 
         // Weights for each Qoe factor
+        // 每个 QoE 因素的权重
         this.weights = {};
-        this.weights.bitrateReward = null;
-        this.weights.bitrateSwitchPenalty = null;
-        this.weights.rebufferPenalty = null;
-        this.weights.latencyPenalty = null;
-        this.weights.playbackSpeedPenalty = null;
+        this.weights.bitrateReward = null; // 比特率奖励权重
+        this.weights.bitrateSwitchPenalty = null; // 比特率切换惩罚权重
+        this.weights.rebufferPenalty = null; // 重新缓冲惩罚权重
+        this.weights.latencyPenalty = null; // 延迟惩罚权重
+        this.weights.playbackSpeedPenalty = null; // 播放速度惩罚权重
 
         // Weighted Sum for each Qoe factor
-        this.bitrateWSum = 0;// kbps
-        this.bitrateSwitchWSum = 0;// kbps
-        this.rebufferWSum = 0;// seconds
-        this.latencyWSum = 0;// seconds
-        this.playbackSpeedWSum = 0;// e.g. 0.95, 1.0, 1.05
+        this.bitrateWSum = 0;// kbps   比特率的加权和
+        this.bitrateSwitchWSum = 0;// kbps   比特率切换的加权和
+        this.rebufferWSum = 0;// seconds   重新缓冲的加权和
+        this.latencyWSum = 0;// seconds   延迟的加权和
+        this.playbackSpeedWSum = 0;// e.g. 0.95, 1.0, 1.05   播放速度的加权和
 
         // Store total Qoe value based on current Weighted Sum values
+        // 根据当前加权和值计算出的总体 QoE 值
         this.totalQoe = 0;
     }
 }

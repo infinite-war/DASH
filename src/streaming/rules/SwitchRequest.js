@@ -32,12 +32,16 @@
 import FactoryMaker from '../../core/FactoryMaker';
 
 const NO_CHANGE = -1;
+// 切换请求的优先级
 const PRIORITY = {
     DEFAULT: 0.5,
     STRONG: 1,
     WEAK: 0
 };
 
+// q：请求的质量级别
+// r：切换请求的原因
+// p：切换请求的优先级
 function SwitchRequest(q, r, p) {
     //TODO refactor all the calls to this to use config to be like everything else.
     let instance,
@@ -46,6 +50,7 @@ function SwitchRequest(q, r, p) {
         reason;
 
     // check priority value
+    // 检查并获取优先级 p 的合法值
     function getPriority(p) {
         let ret = PRIORITY.DEFAULT;
 
@@ -70,6 +75,7 @@ function SwitchRequest(q, r, p) {
     return instance;
 }
 
+// 标识该类的工厂名称
 SwitchRequest.__dashjs_factory_name = 'SwitchRequest';
 const factory = FactoryMaker.getClassFactory(SwitchRequest);
 factory.NO_CHANGE = NO_CHANGE;
