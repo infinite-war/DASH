@@ -32,6 +32,8 @@
     <script src="../../contrib/akamai/controlbar/ControlBar.js"></script>
     <script src="app/src/cast.js"></script>
     <script src="app/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+
 
     <!-- <script src="app/rules/CustomThroughputRule.js"></script>
     <script src="app/rules/DownloadRatioRule.js"></script>
@@ -985,7 +987,7 @@
                                        ng-change="enableChartByName('buffer', 'video')">
                                 <label class="text-primary" for="videoBufferCB" data-toggle="tooltip"
                                        data-placement="top"
-                                       title="先前的缓冲区的长度，以秒为单位">Buffer Length : </label> {{videoBufferLength}}
+                                       title="先前的缓冲区长度，以秒为单位">Buffer Length : </label> {{videoBufferLength}}
                                        <!-- The length of the forward buffer, in seconds -->
                             </div>
 
@@ -1228,6 +1230,7 @@
                 <button id="disable-chart-btn" class="btn btn-primary" ng-click="onChartEnableButtonClick()" ng-cloak>
                     {{getChartButtonLabel()}}
                 </button>
+                <button class="btn btn-primary" ng-click="exportData()">Export</button>
             </div>
             <div id="legend-wrapper" class="legend-row">
             </div>

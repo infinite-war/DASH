@@ -192,3 +192,8 @@ build/typings/
 #Karma Functional tests
 test/functional-karma/coverage
 test/functional-karma/results
+
+
+#metrics_stat
+metrics_stat/datas
+metrics_stat/figs/metrics

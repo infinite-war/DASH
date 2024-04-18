@@ -133,7 +133,7 @@ app.controller('DashController', ['$scope', '$window', 'sources', 'contributors'
     $scope.maxChartableItems = 5;
     $scope.chartCount = 0;
     $scope.chartData = [];
-    $scope.chartState = {
+    $scope.chartState = {   // 绘制哪些因素
         audio: {
             buffer: { data: [], selected: false, color: '#65080c', label: 'Audio Buffer Level' },
             bitrate: { data: [], selected: false, color: '#00CCBE', label: 'Audio Bitrate (kbps)' },
@@ -151,17 +151,31 @@ app.controller('DashController', ['$scope', '$window', 'sources', 'contributors'
         video: {
             buffer: { data: [], selected: true, color: '#00589d', label: 'Video Buffer Level' },
             bitrate: { data: [], selected: true, color: '#ff7900', label: 'Video Bitrate (kbps)' },
-            index: { data: [], selected: false, color: '#326e88', label: 'Video Current Quality' },
-            pendingIndex: { data: [], selected: false, color: '#44c248', label: 'Video Pending Index' },
-            ratio: { data: [], selected: false, color: '#00CCBE', label: 'Video Ratio' },
-            download: { data: [], selected: false, color: '#FF6700', label: 'Video Download Time (sec)' },
-            latency: { data: [], selected: false, color: '#329d61', label: 'Video Latency (ms)' },
-            droppedFPS: { data: [], selected: false, color: '#65080c', label: 'Video Dropped FPS' },
-            mtp: { data: [], selected: false, color: '#FFC400', label: 'Measured throughput (kpbs)' },
-            etp: { data: [], selected: false, color: '#1712B3', label: 'Estimated throughput (kpbs)' },
+            index: { data: [], selected: true, color: '#326e88', label: 'Video Current Quality' },
+            pendingIndex: { data: [], selected: true, color: '#44c248', label: 'Video Pending Index' },
+            ratio: { data: [], selected: true, color: '#00CCBE', label: 'Video Ratio' },
+            download: { data: [], selected: true, color: '#FF6700', label: 'Video Download Time (sec)' },
+            latency: { data: [], selected: true, color: '#329d61', label: 'Video Latency (ms)' },
+            droppedFPS: { data: [], selected: true, color: '#65080c', label: 'Video Dropped FPS' },
+            mtp: { data: [], selected: true, color: '#FFC400', label: 'Measured throughput (kpbs)' },
+            etp: { data: [], selected: true, color: '#1712B3', label: 'Estimated throughput (kpbs)' },
             liveLatency: { data: [], selected: false, color: '#65080c', label: 'Live Latency' },
-            playbackRate: { data: [], selected: false, color: '#65080c', label: 'Playback Rate' }
+            playbackRate: { data: [], selected: true, color: '#65080c', label: 'Playback Rate' }
         }
+        // video: {
+        //     buffer: { data: [], selected: true, color: '#00589d', label: 'Video Buffer Level' },
+        //     bitrate: { data: [], selected: true, color: '#ff7900', label: 'Video Bitrate (kbps)' },
+        //     index: { data: [], selected: false, color: '#326e88', label: 'Video Current Quality' },
+        //     pendingIndex: { data: [], selected: false, color: '#44c248', label: 'Video Pending Index' },
+        //     ratio: { data: [], selected: false, color: '#00CCBE', label: 'Video Ratio' },
+        //     download: { data: [], selected: false, color: '#FF6700', label: 'Video Download Time (sec)' },
+        //     latency: { data: [], selected: false, color: '#329d61', label: 'Video Latency (ms)' },
+        //     droppedFPS: { data: [], selected: false, color: '#65080c', label: 'Video Dropped FPS' },
+        //     mtp: { data: [], selected: false, color: '#FFC400', label: 'Measured throughput (kpbs)' },
+        //     etp: { data: [], selected: false, color: '#1712B3', label: 'Estimated throughput (kpbs)' },
+        //     liveLatency: { data: [], selected: false, color: '#65080c', label: 'Live Latency' },
+        //     playbackRate: { data: [], selected: false, color: '#65080c', label: 'Playback Rate' }
+        // }
     };
 
     /* ======= General ======= */
@@ -2056,6 +2070,7 @@ app.controller('DashController', ['$scope', '$window', 'sources', 'contributors'
         return Math.max(now - $scope.sessionStartTime, 0);
     }
 
+    let csvContent = "";
     function updateMetrics(type) {
         var dashMetrics = $scope.player.getDashMetrics();
         var dashAdapter = $scope.player.getDashAdapter();
@@ -2113,8 +2128,62 @@ app.controller('DashController', ['$scope', '$window', 'sources', 'contributors'
                 }
                 $scope.safeApply();
             }
+
+            // 导出数据
+            var dataRow = {
+                Timestamp: new Date().toISOString(),
+                BufferLength: $scope[type + 'BufferLength'],
+                MaxIndex: $scope[type + 'MaxIndex'],
+                DroppedFrames: $scope[type + 'DroppedFrames'],
+                LiveLatency: $scope[type + 'LiveLatency'],
+                PlaybackRate: $scope[type + 'PlaybackRate'],
+
+                Download: $scope[type + 'Download'],
+                Latency: $scope[type + 'Latency'],
+                Ratio: $scope[type + 'Ratio'],
+                Etp: $scope[type + 'Etp'],
+                Mtp: $scope[type + 'Mtp']
+                // 其他指标...
+            };
+        
+            // 将数据行转换为 CSV 格式
+            var csvRow = Object.values(dataRow).join(',') + '\n';
+        
+            // 将 CSV 行添加到内存中
+            csvContent += csvRow;
         }
     }
+
+    function exportToCSV() {
+        // 如果没有数据则不进行导出
+        if (!csvContent) {
+            return;
+        }
+
+        // 在 CSV 内容的开头添加字段名
+        var headerRow = "Timestamp,BufferLength/缓冲区长度,MaxIndex,"
+            +"DroppedFrames/删除的帧,LiveLatency/延迟,PlaybackRate/媒体播放速率,"
+            +"Download(min|avg|max),Latency(min|avg|max),Ratio(min|avg|max),"
+            +"Etp/估计吞吐量(kpbs),Mtp/实际吞吐量(kpbs)\n";
+
+        var csvContentWithHeader = headerRow + csvContent;
+
+        // 创建 Blob 对象
+        var blob = new Blob([csvContentWithHeader], { type: 'text/csv;charset=utf-8' });
+
+        // 创建 a 标签并设置下载属性，以便下载文件
+        var link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'metrics.csv';
+        link.click();
+
+        // 清空内存中的数据
+        csvContent = "";
+    }
+    $scope.exportData = function () {
+        exportToCSV();
+    };    
+
 
     function stopMetricsInterval() {
         if ($scope.metricsTimer) {
