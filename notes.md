@@ -5,6 +5,24 @@
 
 [可参考博客1](https://soo-q6.github.io/blog/2019-12-27-dashjs/)
 
+## DEBUG
+
+https://juejin.cn/s/run%20npm%20debug%20mode
+https://www.ruanyifeng.com/blog/2018/03/node-debugger.html
+
+> 方法一
+```bash
+npm run start --inspect
+```
+
+然后chrome输入`chrome://inspect`
+
+> 方法二
+
+使用vscode调式模块生成`launch.json文件`并配置相关指令
+
+https://cloud.tencent.com/developer/article/2159920
+
 ## Core 目录
 
 包含对象管理、日志管理、异常信息、事件信息、基础配置等功能

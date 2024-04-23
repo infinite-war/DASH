@@ -27,6 +27,15 @@
 └── utils.py
 
 
+```
 
 
+
+# MISC
+
+## 自动生成`requirements.txt`
+
+```bash
+pip install pipreqs
+pipreqs <项目根目录> --encoding=utf-8 --force
 ```

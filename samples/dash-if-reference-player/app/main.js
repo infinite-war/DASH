@@ -2168,13 +2168,12 @@ app.controller('DashController', ['$scope', '$window', 'sources', 'contributors'
 
         var csvContentWithHeader = headerRow + csvContent;
 
-        // 创建 Blob 对象
         var blob = new Blob([csvContentWithHeader], { type: 'text/csv;charset=utf-8' });
 
         // 创建 a 标签并设置下载属性，以便下载文件
         var link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
-        link.download = 'metrics.csv';
+        link.download = $scope.ABRStrategy + '_metrics.csv';
         link.click();
 
         // 清空内存中的数据

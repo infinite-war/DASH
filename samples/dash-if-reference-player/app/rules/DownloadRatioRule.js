@@ -93,6 +93,7 @@ function DownloadRatioRuleClass() {
         }
 
 
+        // 获取最后一个有效请求(媒体段)，以计算下载时间和总时间，并计算平均带宽
         // Get last valid request
         i = requests.length - 1;
         while (i >= 0 && lastRequest === null) {
