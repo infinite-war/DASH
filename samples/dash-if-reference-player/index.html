@@ -282,25 +282,32 @@
                            ng-change="toggleForceQualitySwitch()" ng-checked="forceQualitySwitchSelected">
                     Force Quality Switch
                 </label>
+                
+                
+                
                 <label class="topcoat-checkbox" data-toggle="tooltip" data-placement="right"
                        title="ABR - Use custom ABR rules">
                     <input type="checkbox" id="customABRRules" ng-model="customABRRulesSelected"
                            ng-change="toggleUseCustomABRRules()" ng-checked="customABRRulesSelected">
                     Use Custom ABR Rules
                 </label>
+
+
+
+                
                 <div class="sub-options-item">
                     <div class="sub-options-item-title">Standard</div>
                     <div class="sub-options-item-body">
-                        <label data-toggle="tooltip" data-placement="right"
+                        <!-- <label data-toggle="tooltip" data-placement="right"
                                title="Dynamically switch between BOLA and Throughput strategies.">
                             <input type="radio" id="abrDynamic" autocomplete="off" name="abrStrategy" checked="checked"
                                    ng-model="ABRStrategy"
                                    ng-click="changeABRStrategy('abrDynamic')" value="abrDynamic">
                             ABR Strategy: Dynamic
-                        </label>
+                        </label> -->
                         <label data-toggle="tooltip" data-placement="right"
                                title="Choose bitrate based on buffer level.">
-                            <input type="radio" id="abrBola" autocomplete="off" name="abrStrategy"
+                            <input type="radio" id="abrBola" autocomplete="off" name="abrStrategy" checked="checked"
                                    ng-model="ABRStrategy"
                                    ng-click="changeABRStrategy('abrBola')" value="abrBola">
                             ABR Strategy: BOLA
@@ -312,6 +319,15 @@
                                    ng-click="changeABRStrategy('abrThroughput')" value="abrThroughput">
                             ABR Strategy: Throughput
                         </label>
+                        <label data-toggle="tooltip" data-placement="right"
+                               title="Choose bitrate based on MMRule">
+                            <input type="radio" id="" autocomplete="off" name="abrStrategy"
+                                   ng-model="ABRStrategy"
+                                   ng-click="changeABRStrategy('abrMM')" value="abrMM">
+                            ABR Strategy: MultiMetrics
+                        </label>
+
+
                         <label class="topcoat-checkbox" data-toggle="tooltip" data-placement="right"
                                title="Enable/Disable InsufficientBufferRule">
                             <input type="checkbox" ng-change="toggleBufferRule()" id="insufficientBufferRule"
@@ -678,7 +694,7 @@
             </div>
         </div> -->
         
-        <div class="options-item">
+        <!-- <div class="options-item">
             <div class="options-item-title">Live delay</div>
             <div class="options-item-body">
                 <label class="options-label">Initial Live delay:</label>
@@ -700,7 +716,7 @@
                     Use SuggestedPresentationDelay
                 </label>
             </div>
-        </div>
+        </div> -->
         <div class="options-item">
             <div class="options-item-title">Initial Settings</div>
             <div class="options-item-body">

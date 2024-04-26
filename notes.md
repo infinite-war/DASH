@@ -3,6 +3,11 @@
 **官方现有的类图见\docs目录**
 
 
+## 官方视频资源
+
+https://dash.akamaized.net/
+
+
 [可参考博客1](https://soo-q6.github.io/blog/2019-12-27-dashjs/)
 
 ## DEBUG

@@ -114,5 +114,5 @@ function MultiMetricsRuleClass(){
 
 }
 
-MultiMetricsRuleClass.__dashjs_factory_name = 'MultiMetricsRule';
-MultiMetricsRule = dashjs.FactoryMaker.getClassFactory(MultiMetricsRuleClass);
+// MultiMetricsRuleClass.__dashjs_factory_name = 'MultiMetricsRule';
+// MultiMetricsRule = dashjs.FactoryMaker.getClassFactory(MultiMetricsRuleClass);

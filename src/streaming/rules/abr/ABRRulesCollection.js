@@ -34,6 +34,7 @@ import AbandonRequestsRule from './AbandonRequestsRule';
 import DroppedFramesRule from './DroppedFramesRule';
 import SwitchHistoryRule from './SwitchHistoryRule';
 import BolaRule from './BolaRule';
+import MultiMerticsRule from './MultiMetricsRule';
 import L2ARule from './L2ARule.js';
 import LoLPRule from './lolp/LoLpRule.js';
 import FactoryMaker from '../../../core/FactoryMaker';
@@ -75,12 +76,14 @@ function ABRRulesCollection(config) {
             }
             // If LoLP is used we only need this one rule
             else if (settings.get().streaming.abr.ABRStrategy === Constants.ABR_STRATEGY_LoLP) {
+                // console.log(settings.get().streaming.abr.ABRStrategy)
                 qualitySwitchRules.push(
                     LoLPRule(context).create({
                         dashMetrics: dashMetrics
                     })
                 );
             } else {
+                console.log(settings.get().streaming.abr.ABRStrategy)
                 // Only one of BolaRule and ThroughputRule will give a switchRequest.quality !== SwitchRequest.NO_CHANGE.
                 // This is controlled by useBufferOccupancyABR mechanism in AbrController.
                 qualitySwitchRules.push(
@@ -94,6 +97,14 @@ function ABRRulesCollection(config) {
                 qualitySwitchRules.push(
                     ThroughputRule(context).create({
                         dashMetrics: dashMetrics
+                    })
+                );
+
+                qualitySwitchRules.push(
+                    MultiMerticsRule(context).create({
+                        dashMetrics: dashMetrics,
+                        mediaPlayerModel: mediaPlayerModel,
+                        settings: settings
                     })
                 );
 

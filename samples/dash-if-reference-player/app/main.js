@@ -328,7 +328,9 @@ app.controller('DashController', ['$scope', '$window', 'sources', 'contributors'
     $scope.videoAutoSwitchSelected = true;
     $scope.forceQualitySwitchSelected = false;
     $scope.videoQualities = [];
-    $scope.ABRStrategy = 'abrDynamic';
+     // $scope.ABRStrategy = 'abrDynamic';
+    $scope.ABRStrategy = 'abrBola';
+   
 
     $scope.liveCatchupMode = 'liveCatchupModeDefault';
     $scope.abrThroughputCalculationMode = 'abrFetchThroughputCalculationMoofParsing';
@@ -2245,9 +2247,11 @@ app.controller('DashController', ['$scope', '$window', 'sources', 'contributors'
 
     function setAdditionalAbrOptions() {
         var currentConfig = $scope.player.getSettings();
-        $scope.fastSwitchSelected = currentConfig.streaming.buffer.fastSwitchEnabled;
+        $scope.fastSwitchSelected = !currentConfig.streaming.buffer.fastSwitchEnabled;
         $scope.videoAutoSwitchSelected = currentConfig.streaming.abr.autoSwitchBitrate.video;
+        // $scope.customABRRulesSelected = !currentConfig.streaming.abr.useDefaultABRRules;
         $scope.customABRRulesSelected = !currentConfig.streaming.abr.useDefaultABRRules;
+        
     }
 
     function setDrmOptions() {
