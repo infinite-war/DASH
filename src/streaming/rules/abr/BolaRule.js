@@ -62,8 +62,6 @@ const PLACEHOLDER_BUFFER_DECAY = 0.99; // Make sure placeholder buffer does not 
 
 function BolaRule(config) {
 
-    console.log('===================use BOLARule====================')
-
     config = config || {};
     const context = this.context;
 
@@ -415,6 +413,9 @@ function BolaRule(config) {
 
     // 决策函数
     function getMaxIndex(rulesContext) {
+        
+        console.log('===================use BOLARule====================')
+
         // 初始化
         const switchRequest = SwitchRequest(context).create();
 
