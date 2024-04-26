@@ -39,7 +39,9 @@
     <script src="app/rules/DownloadRatioRule.js"></script>
     <script src="app/rules/ThroughputRule.js"></script> -->
     <script src="app/rules/MultiMetricsRule.js"></script>
-
+    <script src="app/rules/BolaRule.js"></script>
+    <script src="app/rules/ThroughputRule.js"></script>
+    <script src="app/rules/DownloadRatioRule.js"></script>
 
     <!-- Google Cast -->
     <script src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script>
@@ -291,12 +293,29 @@
                            ng-change="toggleUseCustomABRRules()" ng-checked="customABRRulesSelected">
                     Use Custom ABR Rules
                 </label> -->
-                <label data-toggle="tooltip" data-placement="right"
-                    title="Choose bitrate based on buffer level.">
-                <input type="radio" id="abrBola" autocomplete="off" name="abrStrategy" checked="checked"
-                        ng-model="ABRStrategy"
-                        ng-click="toggleUseCustomABRRules()" value="abrBola">
-                    Use MultiMetricsRule
+                <label data-toggle="tooltip" data-placement="right">
+                    <input type="radio" id="MultiMetricsRule" autocomplete="off" name="abrRule"
+                            ng-model="ABRStrategy"
+                            ng-click="changeABRRules('MultiMetricsRule')" value="MultiMetricsRule">
+                        Use MultiMetricsRule
+                </label>
+                <label data-toggle="tooltip" data-placement="right">
+                    <input type="radio" id="CustomThroughputRule" autocomplete="off" name="abrRule"
+                            ng-model="ABRStrategy"
+                            ng-click="changeABRRules('CustomThroughputRule')" value="CustomThroughputRule">
+                        Use ThroughputRule
+                </label>
+                <label data-toggle="tooltip" data-placement="right">
+                    <input type="radio" id="CustomBolaRule" autocomplete="off" name="abrRule"
+                            ng-model="ABRStrategy"
+                            ng-click="changeABRRules('CustomBolaRule')" value="CustomBolaRule">
+                        Use BolaRule
+                </label>
+                <label data-toggle="tooltip" data-placement="right">
+                    <input type="radio" id="DownloadRatioRule" autocomplete="off" name="abrRule" checked
+                            ng-model="ABRStrategy"
+                            ng-click="changeABRRules('DownloadRatioRule')" value="DownloadRatioRule">
+                        Use DownloadRatioRule
                 </label>
 
 
@@ -311,28 +330,22 @@
                                    ng-click="changeABRStrategy('abrDynamic')" value="abrDynamic">
                             ABR Strategy: Dynamic
                         </label> -->
-                        <label data-toggle="tooltip" data-placement="right"
+
+                        <!-- <label data-toggle="tooltip" data-placement="right"
                                title="Choose bitrate based on buffer level.">
                             <input type="radio" id="abrBola" autocomplete="off" name="abrStrategy" checked="checked"
                                    ng-model="ABRStrategy"
                                    ng-click="changeABRStrategy('abrBola')" value="abrBola">
                             ABR Strategy: BOLA
-                        </label>
-                        <label data-toggle="tooltip" data-placement="right"
+                        </label> -->
+
+                        <!-- <label data-toggle="tooltip" data-placement="right"
                                title="Choose bitrate based on recent throughput.">
                             <input type="radio" id="abrThroughput" autocomplete="off" name="abrStrategy"
                                    ng-model="ABRStrategy"
                                    ng-click="changeABRStrategy('abrThroughput')" value="abrThroughput">
                             ABR Strategy: Throughput
-                        </label>
-                        <label data-toggle="tooltip" data-placement="right"
-                               title="Choose bitrate based on MMRule">
-                            <input type="radio" id="" autocomplete="off" name="abrStrategy"
-                                   ng-model="ABRStrategy"
-                                   ng-click="changeABRStrategy('abrMM')" value="abrMM">
-                            ABR Strategy: MultiMetrics
-                        </label>
-
+                        </label> -->
 
                         <label class="topcoat-checkbox" data-toggle="tooltip" data-placement="right"
                                title="Enable/Disable InsufficientBufferRule">

@@ -414,7 +414,7 @@ function BolaRule(config) {
     // 决策函数
     function getMaxIndex(rulesContext) {
         
-        console.log('===================use BOLARule====================')
+        // console.log('===================use BOLARule====================')
 
         // 初始化
         const switchRequest = SwitchRequest(context).create();

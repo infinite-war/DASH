@@ -52,7 +52,7 @@ function ThroughputRule(config) {
 
     function getMaxIndex(rulesContext) {
 
-        console.log('===================use throughputRule===================')
+        // console.log('===================use throughputRule===================')
 
         const switchRequest = SwitchRequest(context).create();
 

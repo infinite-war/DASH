@@ -29,6 +29,8 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  */
 
+import FactoryMaker from "../../core/FactoryMaker"
+
 /**
  * Metrics Constants declaration
  * @class
@@ -65,3 +67,12 @@ class MetricsConstants {
 
 let constants = new MetricsConstants();
 export default constants;
+
+function MetricsConstantsConstructor(){
+    let instance = new MetricsConstants();
+    return instance;
+}
+
+MetricsConstantsConstructor.__dashjs_factory_name = 'MetricsConstantsConstructor';
+const factory = FactoryMaker.getSingletonFactory(MetricsConstantsConstructor);
+FactoryMaker.updateSingletonFactory(MetricsConstantsConstructor.__dashjs_factory_name, factory);

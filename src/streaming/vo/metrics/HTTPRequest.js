@@ -28,6 +28,10 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *  POSSIBILITY OF SUCH DAMAGE.
  */
+
+
+import FactoryMaker from "../../../core/FactoryMaker";
+
 /**
  * @classdesc This Object holds reference to the HTTPRequest for manifest, fragment and xlink loading.
  * Members which are not defined in ISO23009-1 Annex D should be prefixed by a _ so that they are ignored
@@ -182,3 +186,13 @@ HTTPRequest.CONTENT_STEERING_TYPE = 'ContentSteering';
 HTTPRequest.OTHER_TYPE = 'other';
 
 export {HTTPRequest, HTTPRequestTrace};
+
+
+function HTTPRequestConstructor(){
+    let instance = new HTTPRequest();
+    return instance;
+}
+
+HTTPRequestConstructor.__dashjs_factory_name = 'HTTPRequestConstructor';
+const factory = FactoryMaker.getSingletonFactory(HTTPRequestConstructor);
+FactoryMaker.updateSingletonFactory(HTTPRequestConstructor.__dashjs_factory_name, factory);

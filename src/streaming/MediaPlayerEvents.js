@@ -28,6 +28,7 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *  POSSIBILITY OF SUCH DAMAGE.
  */
+import FactoryMaker from '../core/FactoryMaker';
 import EventsBase from '../core/events/EventsBase';
 
 /**
@@ -455,3 +456,12 @@ class MediaPlayerEvents extends EventsBase {
 
 let mediaPlayerEvents = new MediaPlayerEvents();
 export default mediaPlayerEvents;
+
+function MediaPlayerEventsConstructor(){
+    const instance = new MediaPlayerEvents();
+    return instance;
+}
+
+MediaPlayerEventsConstructor.__dashjs_factory_name = 'MediaPlayerEventsConstructor';
+const factory = FactoryMaker.getSingletonFactory(MediaPlayerEventsConstructor);
+FactoryMaker.updateSingletonFactory(MediaPlayerEventsConstructor.__dashjs_factory_name, factory);

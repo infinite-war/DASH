@@ -9,9 +9,10 @@ function MultiMetricsRuleClass(){
     let DashMetrics = factory.getSingletonFactoryByName('DashMetrics');
     let DashManifestModel = factory.getSingletonFactoryByName('DashManifestModel');
     let StreamController = factory.getSingletonFactoryByName('StreamController');
+    // let EventBus = factory.getSingletonFactoryByName('EventBus');
 
-    let MediaPlayerModel = config.mediaPlayerModel;
-    let EventBus = EventBus(context).getInstance();
+    // let MediaPlayerModel = config.mediaPlayerModel;
+    // let eventBus = EventBus(context).getInstance();
     
     let Debug = factory.getSingletonFactoryByName('Debug');
 
@@ -30,7 +31,7 @@ function MultiMetricsRuleClass(){
     }
     
     function getMaxIndex(rulesContext) {
-        console.log('===================use my rule===================');        
+        console.log('===================use MultiMetricsRule===================');        
         // 实现自定义ABR算法
         let metricsModel = MetricsModel(context).getInstance();
         var mediaType = rulesContext.getMediaInfo().type;

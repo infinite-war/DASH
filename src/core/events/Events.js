@@ -33,7 +33,18 @@
  * @ignore
  */
 import CoreEvents from './CoreEvents';
+import FactoryMaker from '../FactoryMaker';
+
 class Events extends CoreEvents {
 }
 let events = new Events();
 export default events;
+
+function EventsConstructor(){
+    let instance = new Events();
+    return instance;
+}
+
+EventsConstructor.__dashjs_factory_name = 'EventsConstructor';
+const factory = FactoryMaker.getSingletonFactory(EventsConstructor);
+FactoryMaker.updateSingletonFactory(EventsConstructor.__dashjs_factory_name, factory);

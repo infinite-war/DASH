@@ -596,6 +596,28 @@ app.controller('DashController', ['$scope', '$window', 'sources', 'contributors'
         }
     };
 
+    let availableRules = new Map([['CustomThroughputRule', CustomThroughputRule], 
+                            ['CustomBolaRule', CustomBolaRule], 
+                            ['MultiMetricsRule', MultiMetricsRule],
+                            ['DownloadRatioRule', DownloadRatioRule]])
+    $scope.changeABRRules = function (abrRuleName) {
+        $scope.player.updateSettings({
+            'streaming': {
+                'abr': {
+                    'useDefaultABRRules': !$scope.customABRRulesSelected
+                }
+            }
+        });
+
+        availableRules.forEach(function(val, key){
+            if(abrRuleName === key){
+                $scope.player.addABRCustomRule('qualitySwitchRules', key, val);
+            }else{
+                $scope.player.removeABRCustomRule(key);
+            }
+        })
+    };
+
     $scope.toggleFastSwitch = function () {
         $scope.player.updateSettings({
             'streaming': {
@@ -2173,7 +2195,7 @@ app.controller('DashController', ['$scope', '$window', 'sources', 'contributors'
         // 创建 a 标签并设置下载属性，以便下载文件
         var link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
-        link.download = $scope.ABRStrategy + '_metrics.csv';
+        link.download = $scope.player.getABRCustomRules()[0].rulename + '_metrics.csv';
         link.click();
 
         // 清空内存中的数据
@@ -2245,7 +2267,7 @@ app.controller('DashController', ['$scope', '$window', 'sources', 'contributors'
 
     function setAdditionalAbrOptions() {
         var currentConfig = $scope.player.getSettings();
-        $scope.fastSwitchSelected = currentConfig.streaming.buffer.fastSwitchEnabled;
+        $scope.fastSwitchSelected = !currentConfig.streaming.buffer.fastSwitchEnabled;
         $scope.videoAutoSwitchSelected = currentConfig.streaming.abr.autoSwitchBitrate.video;
         $scope.customABRRulesSelected = !currentConfig.streaming.abr.useDefaultABRRules;
     }

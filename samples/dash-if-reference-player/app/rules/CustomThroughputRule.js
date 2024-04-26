@@ -1,5 +1,5 @@
-var CustomThroughputRule;
-function CustomThroughputRuleClass() {
+// var CustomThroughputRule;
+function CCustomThroughputRuleClass() {
 
     let factory = dashjs.FactoryMaker;
     let SwitchRequest = factory.getClassFactoryByName('SwitchRequest');
@@ -82,5 +82,5 @@ function CustomThroughputRuleClass() {
     return instance;
 }
 
-CustomThroughputRuleClass.__dashjs_factory_name = 'CustomThroughputRule';
-CustomThroughputRule = dashjs.FactoryMaker.getClassFactory(CustomThroughputRuleClass);
+// CustomThroughputRuleClass.__dashjs_factory_name = 'CustomThroughputRule';
+// CustomThroughputRule = dashjs.FactoryMaker.getClassFactory(CustomThroughputRuleClass);

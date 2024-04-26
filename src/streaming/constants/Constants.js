@@ -29,6 +29,8 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  */
 
+import FactoryMaker from "../../core/FactoryMaker";
+
 /**
  * Constants declaration
  * @class
@@ -309,3 +311,12 @@ class Constants {
 
 const constants = new Constants();
 export default constants;
+
+function ConstantsConstructor(){
+    let instance = new Constants();
+    return instance;
+}
+
+ConstantsConstructor.__dashjs_factory_name = 'ConstantsConstructor';
+const factory = FactoryMaker.getSingletonFactory(ConstantsConstructor);
+FactoryMaker.updateSingletonFactory(ConstantsConstructor.__dashjs_factory_name, factory);
