@@ -30,7 +30,7 @@
  */
 
 
-import FactoryMaker from "../../../core/FactoryMaker";
+import FactoryMaker from '../../../core/FactoryMaker';
 
 /**
  * @classdesc This Object holds reference to the HTTPRequest for manifest, fragment and xlink loading.
