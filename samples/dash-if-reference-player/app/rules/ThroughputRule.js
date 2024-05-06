@@ -44,14 +44,17 @@ function CustomThroughputRuleClass() {
         const streamId = streamInfo ? streamInfo.id : null;
         const isDynamic = streamInfo && streamInfo.manifestInfo ? streamInfo.manifestInfo.isDynamic : null;
         const throughputHistory = abrController.getThroughputHistory();
-        const throughput = throughputHistory.getSafeAverageThroughput(mediaType, isDynamic);
-        const latency = throughputHistory.getAverageLatency(mediaType);
+        const throughput = throughputHistory.getSafeAverageThroughput(mediaType, isDynamic); // 吞吐量
+        const latency = throughputHistory.getAverageLatency(mediaType); // 延迟
         const useBufferOccupancyABR = rulesContext.useBufferOccupancyABR();
 
         if (isNaN(throughput) || !currentBufferState || useBufferOccupancyABR) {
             return switchRequest;
         }
 
+        // 首先检查当前没有中止加载的请求。如果缓冲状态良好（已加载）或者是动态流（如直播），
+        // 则基于当前的吞吐量和延迟，通过 abrController 确定合适的视频码率等级。
+        // 此外，设置加载延迟为0，并记录决策的原因。
         if (abrController.getAbandonmentStateFor(streamId, mediaType) !== MetricsConstants.ABANDON_LOAD) {
             if (currentBufferState.state === MetricsConstants.BUFFER_LOADED || isDynamic) {
                 switchRequest.quality = abrController.getQualityForBitrate(mediaInfo, throughput, streamId, latency);
@@ -62,18 +65,6 @@ function CustomThroughputRuleClass() {
 
         return switchRequest;
     }
-
-    // function getMaxIndex(rulesContext) {
-    //     // here you can get some informations aboit metrics for example, to implement the rule
-    //     let metricsModel = MetricsModel(context).getInstance();
-    //     var mediaType = rulesContext.getMediaInfo().type;
-    //     var metrics = metricsModel.getMetricsFor(mediaType, true);
-
-    //     // this sample only display metrics in console
-    //     console.log(metrics);
-
-    //     return SwitchRequest(context).create();
-    // }
 
     instance = {
         getMaxIndex: getMaxIndex

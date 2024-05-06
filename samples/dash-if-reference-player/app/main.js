@@ -1119,7 +1119,7 @@ app.controller('DashController', ['$scope', '$window', 'sources', 'contributors'
             loadCastMedia($scope.selectedItem.url, $scope.protData);
         } else {
             $scope.player.setProtectionData($scope.protData);
-            $scope.player.attachSource($scope.selectedItem.url);
+            $scope.player.attachSource($scope.selectedItem.url); // 获取MPD文件
         }
         if ($scope.initialSettings.audio) {
             $scope.player.setInitialMediaSettingsFor('audio', {
@@ -2243,10 +2243,10 @@ app.controller('DashController', ['$scope', '$window', 'sources', 'contributors'
 
     function setAbrRules() {
         var currentConfig = $scope.player.getSettings();
-        $scope.additionalAbrRules.insufficientBufferRule = currentConfig.streaming.abr.additionalAbrRules.insufficientBufferRule;
-        $scope.additionalAbrRules.switchHistoryRule = currentConfig.streaming.abr.additionalAbrRules.switchHistoryRule;
-        $scope.additionalAbrRules.droppedFramesRule = currentConfig.streaming.abr.additionalAbrRules.droppedFramesRule;
-        $scope.additionalAbrRules.abandonRequestsRule = currentConfig.streaming.abr.additionalAbrRules.abandonRequestsRule;
+        $scope.additionalAbrRules.insufficientBufferRule = !currentConfig.streaming.abr.additionalAbrRules.insufficientBufferRule;
+        $scope.additionalAbrRules.switchHistoryRule = !currentConfig.streaming.abr.additionalAbrRules.switchHistoryRule;
+        $scope.additionalAbrRules.droppedFramesRule = !currentConfig.streaming.abr.additionalAbrRules.droppedFramesRule;
+        $scope.additionalAbrRules.abandonRequestsRule = !currentConfig.streaming.abr.additionalAbrRules.abandonRequestsRule;
         $scope.ABRStrategy = currentConfig.streaming.abr.ABRStrategy;
         $scope.abrThroughputCalculationMode = currentConfig.streaming.abr.fetchThroughputCalculationMode;
     }
@@ -2441,7 +2441,7 @@ app.controller('DashController', ['$scope', '$window', 'sources', 'contributors'
             setCMCDSettings();
             setCMSDSettings();
 
-            checkLocationProtocol();
+            // checkLocationProtocol();
 
             var vars = getUrlVars();
             var item = {};

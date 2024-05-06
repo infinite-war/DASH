@@ -421,9 +421,9 @@ function CustomBolaRuleClass() {
         const useBufferOccupancyABR = rulesContext.useBufferOccupancyABR();
         switchRequest.reason = switchRequest.reason || {};
 
-        if (!useBufferOccupancyABR) {
-            return switchRequest;
-        }
+        // if (!useBufferOccupancyABR) {
+        //     return switchRequest;
+        // }
 
         scheduleController.setTimeToLoadDelay(0);
 

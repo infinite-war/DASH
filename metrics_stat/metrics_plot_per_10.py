@@ -14,7 +14,7 @@ def getMetricsAndPlot(fileName, filePath):
     df = pd.read_csv(filePath, encoding='utf-8')
 
     curPath = os.path.dirname(os.path.abspath(__file__))
-    plotDir = os.path.join(current_directory, 'figs\\' + fileName.rsplit('.', 1)[0])
+    plotDir = os.path.join(current_directory, 'figs\\' + fileName.rsplit('.', 1)[0] + '_per_10')
     if os.path.exists(plotDir):
         clearDir(plotDir)
     else:

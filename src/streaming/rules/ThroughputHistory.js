@@ -130,7 +130,7 @@ function ThroughputHistory(config) {
             // if we are here then we have some entries already, but they are cached, and now we have a new uncached entry
             clearSettingsForMediaType(mediaType);
         }
-
+        
         throughputDict[mediaType].push(throughput);
         eventBus.trigger(MediaPlayerEvents.THROUGHPUT_MEASUREMENT_STORED, {
             throughput,

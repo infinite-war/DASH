@@ -898,10 +898,16 @@ function Settings() {
                 reuseExistingSourceBuffers: true,
                 bufferPruningInterval: 10,
                 bufferToKeep: 20,
-                bufferTimeAtTopQuality: 30,
-                bufferTimeAtTopQualityLongForm: 60,
+
+                // stableBufferTime: 12,
+                // bufferTimeAtTopQuality: 30,
+                // bufferTimeAtTopQualityLongForm: 60,
+                stableBufferTime: 60,
+                bufferTimeAtTopQuality: 60,
+                bufferTimeAtTopQualityLongForm: 90,
+
                 initialBufferLevel: NaN,
-                stableBufferTime: 12,
+                
                 longFormContentDurationThreshold: 600,
                 stallThreshold: 0.3,
                 useAppendWindow: true,

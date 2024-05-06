@@ -51,6 +51,8 @@ const DEFAULT_VIDEO_BITRATE = 1000;
 const DEFAULT_AUDIO_BITRATE = 100;
 const QUALITY_DEFAULT = 0;
 
+
+
 function AbrController() {
 
     const context = this.context;

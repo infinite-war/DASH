@@ -89,15 +89,17 @@ function ABRRulesCollection(config) {
                     BolaRule(context).create({
                         dashMetrics: dashMetrics,
                         mediaPlayerModel: mediaPlayerModel,
-                        settings: settings
+                        settings: settings,
                     })
                 );
+                // qualitySwitchRules[qualitySwitchRules.length-1].rulename = "BolaRule";
 
                 qualitySwitchRules.push(
                     ThroughputRule(context).create({
                         dashMetrics: dashMetrics
                     })
                 );
+                // qualitySwitchRules[qualitySwitchRules.length-1].rulename = "ThroughputRule";
 
                 if (settings.get().streaming.abr.additionalAbrRules.insufficientBufferRule) {
                     qualitySwitchRules.push(
@@ -106,18 +108,21 @@ function ABRRulesCollection(config) {
                             settings
                         })
                     );
+                    // qualitySwitchRules[qualitySwitchRules.length-1].rulename = "InsufficientBufferRule";
                 }
 
                 if (settings.get().streaming.abr.additionalAbrRules.switchHistoryRule) {
                     qualitySwitchRules.push(
                         SwitchHistoryRule(context).create()
                     );
+                    // qualitySwitchRules[qualitySwitchRules.length-1].rulename = "SwitchHistoryRule";
                 }
 
                 if (settings.get().streaming.abr.additionalAbrRules.droppedFramesRule) {
                     qualitySwitchRules.push(
                         DroppedFramesRule(context).create()
                     );
+                    // qualitySwitchRules[qualitySwitchRules.length-1].rulename = "DroppedFramesRule";
                 }
 
                 if (settings.get().streaming.abr.additionalAbrRules.abandonRequestsRule) {
@@ -128,6 +133,7 @@ function ABRRulesCollection(config) {
                             settings: settings
                         })
                     );
+                    // qualitySwitchRules[qualitySwitchRules.length-1].rulename = "AbandonRequestsRule";
                 }
             }
         }
@@ -136,12 +142,14 @@ function ABRRulesCollection(config) {
         const customRules = customParametersModel.getAbrCustomRules();
         customRules.forEach(function (rule) {
             if (rule.type === QUALITY_SWITCH_RULES) {
+                // qualitySwitchRules.push(rule.rule(context).create());
                 qualitySwitchRules.push(rule.rule(context).create());
             }
 
             if (rule.type === ABANDON_FRAGMENT_RULES) {
                 abandonFragmentRules.push(rule.rule(context).create());
             }
+            qualitySwitchRules[qualitySwitchRules.length-1].rulename = rule.rulename;
         });
     }
 
@@ -198,7 +206,8 @@ function ABRRulesCollection(config) {
             quality = newSwitchReq.quality;
             reason = newSwitchReq.reason;
         }
-
+        console.log(srArray);
+        console.log('选择码率级别', quality);
         return SwitchRequest(context).create(quality, reason);
     }
 
@@ -206,7 +215,13 @@ function ABRRulesCollection(config) {
         const switchRequestArray = qualitySwitchRules.map(rule => rule.getMaxIndex(rulesContext));
         const activeRules = _getRulesWithChange(switchRequestArray);
         const maxQuality = getMinSwitchRequest(activeRules);
+        // let currentRule = window.player.getABRCustomRules()[0].rulename;
 
+        // for(let i = 0; i<qualitySwitchRules.length; i++){
+        //     if(qualitySwitchRules[i].rulename == currentRule){
+        //         return 
+        //     }
+        // }
         return maxQuality || SwitchRequest(context).create();
     }
 
