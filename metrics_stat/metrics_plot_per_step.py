@@ -5,7 +5,7 @@ import os
 import re
 import glob
 
-def getMetricsAndPlot(fileName, filePath):
+def getMetricsAndPlot(fileName, filePath, step):
 
     plt.rcParams['font.sans-serif'] = ['SimSun']  # 指定使用宋体
     plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
@@ -14,7 +14,7 @@ def getMetricsAndPlot(fileName, filePath):
     df = pd.read_csv(filePath, encoding='utf-8')
 
     curPath = os.path.dirname(os.path.abspath(__file__))
-    plotDir = os.path.join(current_directory, 'figs\\' + fileName.rsplit('.', 1)[0])
+    plotDir = os.path.join(current_directory, 'figs\\' + fileName.rsplit('.', 1)[0] + 'per_' + str(step))
     if os.path.exists(plotDir):
         clearDir(plotDir)
     else:
@@ -51,7 +51,7 @@ def getMetricsAndPlot(fileName, filePath):
 
 
     replaceChPattern = r"[/:|() ]"
-
+    bandwidth_value = 6
 
     # 遍历每一列，绘制折线图并保存为单独的图像文件
     for column in df.columns:
@@ -62,15 +62,33 @@ def getMetricsAndPlot(fileName, filePath):
             # 替换文件名中的非法字符
             safe_column_name = re.sub(replaceChPattern, '_', column)
 
-            plt.figure(figsize=(10, 6))
-            plt.plot(df["Time"], df[column])
-            plt.xlabel('时间/s')
-            plt.ylabel(column)
-            plt.title(f'{column} 变化情况')
-            plt.grid(True)
-            plt.savefig(plotDir + f'/{safe_column_name}_plot.png')
-            plt.close()
+            # plt.figure(figsize=(10, 6))
+            # # plt.plot(df["Time"], df[column])
+            # plt.plot(df["Time"][::step], df[column][::step], linestyle='-', label=column)
+            # plt.xlabel('时间/s')
+            # plt.ylabel(column)
+            # plt.title(f'{column} 变化情况')
+            # plt.grid(True)
 
+            fig, ax1 = plt.subplots(figsize=(10, 6))
+            ax1.plot(df["Time"][::step], df[column][::step], linestyle='-', label=column)
+            ax1.set_xlabel('时间/s')
+            ax1.set_ylabel(column)
+            ax1.set_title(f'{column} 变化情况（每隔 {step} 个数据点）')
+            ax1.legend(loc=f'upper left')
+            ax1.grid(True)
+
+            # Create a second y-axis to the right
+            ax2 = ax1.twinx()
+            ax2.axhline(y=bandwidth_value, color='orange', linestyle='--', label='带宽 (6 Mbps)')
+            ax2.set_ylabel('带宽/Mbps')
+            ax2.legend(loc='upper right')
+
+            # plt.savefig(plotDir + f'/{safe_column_name}_plot.png')
+            # plt.close()
+            save_path = os.path.join(plotDir, f'{safe_column_name}_plot.png')
+            fig.savefig(save_path)
+            plt.close(fig)
 
 
 def clearDir(dirPath):
@@ -87,9 +105,11 @@ fileList = ['MultiMetricsRule_metrics.csv',
             'ThroughputRule_metrics.csv']
 
 if __name__ == "__main__":
+    step = 5
+
     current_directory = os.path.dirname(os.path.abspath(__file__))
     for file in fileList:
         filePath = os.path.join(current_directory, 'datas\\' + file)
         if os.path.exists(filePath):
-            getMetricsAndPlot(file, filePath)
+            getMetricsAndPlot(file, filePath, step)
 

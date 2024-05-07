@@ -196,7 +196,4 @@ test/functional-karma/results
 
 #metrics_stat
 metrics_stat/datas
-metrics_stat/figs/metrics
-metrics_stat/figs/MultiMetricsRule_metrics
-metrics_stat/figs/BolaRule_metrics_metrics
-metrics_stat/figs/ThroughputRule_metrics_metrics
+metrics_stat/figs

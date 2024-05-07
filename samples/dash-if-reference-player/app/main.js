@@ -285,6 +285,7 @@ app.controller('DashController', ['$scope', '$window', 'sources', 'contributors'
     $scope.videoEtp = 0;
     $scope.videoLiveLatency = 0;
     $scope.videoPlaybackRate = 1.00;
+    $scope.RateList = [];   // Mbps
 
     $scope.audioBitrate = 0;
     $scope.audioIndex = 0;
@@ -434,7 +435,21 @@ app.controller('DashController', ['$scope', '$window', 'sources', 'contributors'
 
     $scope.player.on(dashjs.MediaPlayer.events.MANIFEST_LOADED, function (e) { /* jshint ignore:line */
         $scope.isDynamic = e.data.type === 'dynamic';
+        let MPD = e.data.Period;
+        $scope.RateList = [];
+        let repList = MPD.AdaptationSet[0].Representation;
+        for(let i = 0; i < repList.length; i++){
+            $scope.RateList.push(extractLastNumericValue(repList[i].id) / 1000);
+        }
+        $scope.RateList.sort(function(a, b){return a - b});
     }, $scope);
+    function extractLastNumericValue(str) {
+        const match = str.match(/(\d+)k$/);
+        if (match) {
+            return parseInt(match[1], 10);
+        }
+        return NaN;
+    }
 
 
     $scope.player.on(dashjs.MediaPlayer.events.REPRESENTATION_SWITCH, function (e) {
@@ -2123,6 +2138,13 @@ app.controller('DashController', ['$scope', '$window', 'sources', 'contributors'
             $scope[type + 'LiveLatency'] = liveLatency;
             $scope[type + 'PlaybackRate'] = playbackRate;
 
+            let x = $scope.videoQualities;
+    
+            const lastRequest = dashMetrics.getCurrentHttpRequest('video');
+            let quality = lastRequest != null ? lastRequest._quality : -1;
+            $scope[type + 'rateLevel'] = quality;
+            $scope[type + 'rate'] = quality == -1 ? 0 : $scope.RateList[quality];
+
             var httpMetrics = calculateHTTPMetrics(type, dashMetrics.getHttpRequests(type));
             if (httpMetrics) {
                 $scope[type + 'Download'] = httpMetrics.download[type].low.toFixed(2) + ' | ' + httpMetrics.download[type].average.toFixed(2) + ' | ' + httpMetrics.download[type].high.toFixed(2);
@@ -2155,6 +2177,8 @@ app.controller('DashController', ['$scope', '$window', 'sources', 'contributors'
             var dataRow = {
                 Timestamp: new Date().toISOString(),
                 BufferLength: $scope[type + 'BufferLength'],
+                RateLevel: $scope[type + 'rateLevel'],
+                Rate: $scope[type + 'rate'],
                 MaxIndex: $scope[type + 'MaxIndex'],
                 DroppedFrames: $scope[type + 'DroppedFrames'],
                 LiveLatency: $scope[type + 'LiveLatency'],
@@ -2183,7 +2207,7 @@ app.controller('DashController', ['$scope', '$window', 'sources', 'contributors'
         }
 
         // 在 CSV 内容的开头添加字段名
-        var headerRow = "Timestamp,BufferLength/缓冲区长度,MaxIndex,"
+        var headerRow = "Timestamp,BufferLength/缓冲区长度,rateLevel,rate/视频码率(Mbps),MaxIndex,"
             +"DroppedFrames/删除的帧,LiveLatency/延迟,PlaybackRate/媒体播放速率,"
             +"Download(min|avg|max),Latency(min|avg|max),Ratio(min|avg|max),"
             +"Etp/估计吞吐量(kpbs),Mtp/实际吞吐量(kpbs)\n";

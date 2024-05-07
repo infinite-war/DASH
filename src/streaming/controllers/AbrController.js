@@ -652,9 +652,9 @@ function AbrController() {
             if (minIdx !== undefined && ((newQuality > SwitchRequest.NO_CHANGE) ? newQuality : oldQuality) < minIdx) {
                 newQuality = minIdx;
             }
-            if (newQuality > maxIdx) {
-                newQuality = maxIdx;
-            }
+            // if (newQuality > maxIdx) {
+            //     newQuality = maxIdx;
+            // }
 
             switchHistoryDict[streamId][type].push({ oldValue: oldQuality, newValue: newQuality });
 

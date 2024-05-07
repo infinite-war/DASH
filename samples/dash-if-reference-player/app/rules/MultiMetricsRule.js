@@ -253,11 +253,11 @@ function MultiMetricsRuleClass(){
         // tresponse:客户端接收到HTTP相应的第一个字节的时间点
         // _tfinish：客户端接受完HTTP相应的最后一个字节的时间点，既请求完成时间。
         // 请求时间
-        let requestTime = (lastRequest.tresponse.getTime() - lastRequest.trequest.getTime()) / 1000;
-        // 下载时间
-        let downloadTime = (lastRequest._tfinish.getTime() - lastRequest.tresponse.getTime()) / 1000;
-        // 视频块传输时间
-        let transmissionTime = (lastRequest._tfinish.getTime() - lastRequest.trequest.getTime()) / 1000; // 单位为s 
+        // let requestTime = (lastRequest.tresponse.getTime() - lastRequest.trequest.getTime()) / 1000;
+        // // 下载时间
+        // let downloadTime = (lastRequest._tfinish.getTime() - lastRequest.tresponse.getTime()) / 1000;
+        // // 视频块传输时间
+        // let transmissionTime = (lastRequest._tfinish.getTime() - lastRequest.trequest.getTime()) / 1000; // 单位为s 
 
         // =========== 视频切片相关 ============
         // 上一个视频切片大小
@@ -271,17 +271,21 @@ function MultiMetricsRuleClass(){
         // 实际吞吐量(kbps)
         // let throughput = chunkSzie*8 / transmissionTime / 1000;
 
+        // switchRequest.quality = 8;
+        // switchRequest.priority = SwitchRequest.PRIORITY.STRONG;
+        // return switchRequest;
+
         // 前N个(<=N)请求的平均带宽
         count = 1;
         let N = 10;
         let alpha = 0.8;
-        let w = 0.4;
+        let w = 0.5;
         let a = 1;
         let b = 1;
         let t_s = 4;  // 视频切片时长
         let t_p = 0;  // 停顿时长
-        let lambda = 0.5;
-        let mu = 0.5;
+        let lambda = 0.6;
+        let mu = 0.4;
         // 缓冲区视频内容时长(s)
         let l_k = dashMetrics.getCurrentBufferLevel(mediaType, true);
         let l_min = 10;
@@ -296,15 +300,20 @@ function MultiMetricsRuleClass(){
             rateLevelList.shift();
         }
 
+        // switchRequest.quality = 9;
+        // switchRequest.priority = SwitchRequest.PRIORITY.STRONG;
+        // return switchRequest;
+
+
         // // 均带宽(bps)
         // let avgBandwidth = latencyInBandwidth ? (totalBytesLength / totalTime) : (totalBytesLength / downloadTime);
         setBandWidthList(requests, N);
-        let preBandWidthList = bandWidthList.slice(0, bandWidthList.slice());
+        let preBandWidthList = bandWidthList.slice(0, bandWidthList.length-1);
 
         let m_b_N = getMean(bandWidthList);
         let m_b_N_1 = getMean(preBandWidthList);
         let m_v_N = getMean(videoRateList);
-        let sig_v_N = getSigma(videoRateList);
+        // let sig_v_N = getSigma(videoRateList);
         let d_k = Math.abs(m_b_N - m_v_N) / m_b_N;
         let d_max = 0.3;
 
@@ -348,40 +357,41 @@ function MultiMetricsRuleClass(){
                 let F_next_max = Math.max(F_next_plus, F_next_minus, F_next_eq);
                 if(F_next_max == F_next_max){
                     switchRequest.quality = r_k_plus;
-                    switchRequest.reason.state = SWITCH_STATE_PLUS;
+                    switchRequest.reason = SWITCH_STATE_PLUS;
                     // console.log(SWITCH_STATE_PLUS);
                 }else if(F_next_max == F_next_minus){
                     switchRequest.quality = r_k_minus;
-                    switchRequest.reason.state = SWITCH_STATE_MINUS;
+                    switchRequest.reason = SWITCH_STATE_MINUS;
                 }else if(F_next_eq == F_next_eq){
                     switchRequest.quality = r_k_eq;
-                    switchRequest.reason.state = SWITCH_STATE_EQ;
+                    switchRequest.reason = SWITCH_STATE_EQ;
                 }
                 return switchRequest;
             }else{
                 switchRequest.quality = getClosestRate(m_b_N);
-                switchRequest.reason.state = SWITCH_STATE_B;
+                switchRequest.reason = SWITCH_STATE_B;
             }
         }else if(l_k > l_max){
             // return SwitchRequest(context).create();
-        }else if(l_k < l_max){
+        }else if(l_k < l_min){
             switchRequest.quality = -1;
             for(let i = r_k; i >= 0; i--){
-                l_k_1 = l_k + t_s -  - t_p;
+                l_k_1 = l_k + t_s - (RateList[r_k]/b_next) - t_p;
                 if( l_k_1 > l_k){
                     switchRequest.quality = i;
                     break;
                 }
             }
             switchRequest.quality = Math.max(switchRequest.quality, 0);
+            switchRequest.reason = SWITCH_STATE_STABLE;
         }
 
 
 
-        console.log('视频块大小为:' +chunkSzie / 1024+'KB');
-        console.log('吞吐量：'+throughput+'KBps');
-        console.log('MMRule决策码率级别'+lastQuality);
-
+        // console.log('视频块大小为:' +chunkSzie / 1024+'KB');
+        // console.log('吞吐量：'+throughput+'KBps');
+        console.log('MMRule决策码率级别'+switchRequest.quality);
+        // switchRequest.priority = SwitchRequest.PRIORITY.STRONG;
         return switchRequest;
     }
 
@@ -394,7 +404,7 @@ function MultiMetricsRuleClass(){
         let i = requests.length - 1; 
         while (i >= 0 && count < N) {
             currentRequest = requests[i];
-            if (currentRequest.type !== 'MediaSegment' && currentRequest._tfinish && currentRequest.trequest
+            if (currentRequest._tfinish && currentRequest.trequest
                  && currentRequest.tresponse && currentRequest.trace && currentRequest.trace.length > 0) {
                 let _totalTime = (currentRequest._tfinish.getTime() - currentRequest.trequest.getTime()) / 1000;
                 let _downloadTime = (currentRequest._tfinish.getTime() - currentRequest.tresponse.getTime()) / 1000;
