@@ -63,6 +63,8 @@ function CustomThroughputRuleClass() {
             }
         }
 
+        console.log('ThroughputRule决策码率级别'+switchRequest.quality);
+
         return switchRequest;
     }
 

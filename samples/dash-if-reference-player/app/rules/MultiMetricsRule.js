@@ -284,8 +284,8 @@ function MultiMetricsRuleClass(){
         let b = 1;
         let t_s = 4;  // 视频切片时长
         let t_p = 0;  // 停顿时长
-        let lambda = 0.6;
-        let mu = 0.4;
+        let lambda = 0.4;
+        let mu = 0.6;
         // 缓冲区视频内容时长(s)
         let l_k = dashMetrics.getCurrentBufferLevel(mediaType, true);
         let l_min = 10;

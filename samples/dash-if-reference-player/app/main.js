@@ -2180,9 +2180,9 @@ app.controller('DashController', ['$scope', '$window', 'sources', 'contributors'
                 BufferLength: $scope[type + 'BufferLength'],
                 RateLevel: $scope[type + 'rateLevel'],
                 Rate: $scope[type + 'rate'],
+                Latency: $scope[type + 'Latency'],
                 MaxIndex: $scope[type + 'MaxIndex'],
                 DroppedFrames: $scope[type + 'DroppedFrames'],
-                LiveLatency: $scope[type + 'LiveLatency'],
                 PlaybackRate: $scope[type + 'PlaybackRate'],
 
                 Download: $scope[type + 'Download'],
@@ -2208,10 +2208,10 @@ app.controller('DashController', ['$scope', '$window', 'sources', 'contributors'
         }
 
         // 在 CSV 内容的开头添加字段名
-        var headerRow = "Type,Timestamp,BufferLength/缓冲区长度,rateLevel,rate/视频码率(Mbps),MaxIndex,"
-            +"DroppedFrames/删除的帧,LiveLatency/延迟,PlaybackRate/媒体播放速率,"
+        var headerRow = "Type,Timestamp,BufferLength/缓冲区长度,rateLevel,rate/视频码率(mbps),"
+            +"Latency,MaxIndex,DroppedFrames/删除的帧,PlaybackRate/媒体播放速率,"
             +"Download(min|avg|max),Latency(min|avg|max),Ratio(min|avg|max),"
-            +"Etp/估计吞吐量(kpbs),Mtp/实际吞吐量(kpbs)\n";
+            +"Etp/估计吞吐量(kbps),Mtp/实际吞吐量(kbps)\n";
 
         var csvContentWithHeader = headerRow + csvContent;
 

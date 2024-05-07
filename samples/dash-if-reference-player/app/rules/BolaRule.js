@@ -36,10 +36,16 @@ function CustomBolaRuleClass() {
     let factory = dashjs.FactoryMaker;
     let SwitchRequest = factory.getClassFactoryByName('SwitchRequest');
     let MetricsModel = factory.getSingletonFactoryByName('MetricsModel');
-    
     let Debug = factory.getSingletonFactoryByName('Debug');
-    const dashMetrics = factory.getSingletonFactoryByName('DashMetrics');
-    const mediaPlayerModel = factory.getSingletonFactoryByName('MediaPlayerModel');
+    let DashMetrics = factory.getSingletonFactoryByName('DashMetrics');
+    let dashMetrics = DashMetrics(context).getInstance();
+
+    let PlaybackController = factory.getSingletonFactoryByName('PlaybackController');
+    let playbackController = PlaybackController().getInstance();
+    let MediaPlayerModel = factory.getSingletonFactoryByName('MediaPlayerModel');
+    let mediaPlayerModel = MediaPlayerModel().getInstance();
+    mediaPlayerModel.setConfig({playbackController});
+
 
     let HTTPRequestConstructor = factory.getSingletonFactoryByName('HTTPRequestConstructor');
     let HTTPRequest = HTTPRequestConstructor().getInstance();
@@ -402,6 +408,8 @@ function CustomBolaRuleClass() {
         
         console.log('===================use BOLARule====================');
 
+        const stableBufferTime = mediaPlayerModel.getStableBufferTime();
+
         // 初始化
         const switchRequest = SwitchRequest(context).create();
 
@@ -542,6 +550,8 @@ function CustomBolaRuleClass() {
                 bolaState.state = BOLA_STATE_STARTUP;
                 clearBolaStateOnSeek(bolaState);
         }
+
+        console.log('BolaRule决策码率级别'+switchRequest.quality);
 
         return switchRequest;
     }
