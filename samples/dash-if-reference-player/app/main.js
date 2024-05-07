@@ -2131,7 +2131,7 @@ app.controller('DashController', ['$scope', '$window', 'sources', 'contributors'
                 liveLatency = $scope.player.getCurrentLiveLatency();
                 playbackRate = parseFloat($scope.player.getPlaybackRate().toFixed(2));
             }
-
+            $scope[type] = type;
             $scope[type + 'BufferLength'] = bufferLevel;
             $scope[type + 'MaxIndex'] = maxIndex;
             $scope[type + 'DroppedFrames'] = droppedFPS;
@@ -2175,6 +2175,7 @@ app.controller('DashController', ['$scope', '$window', 'sources', 'contributors'
 
             // 导出数据
             var dataRow = {
+                Type: $scope[type],
                 Timestamp: new Date().toISOString(),
                 BufferLength: $scope[type + 'BufferLength'],
                 RateLevel: $scope[type + 'rateLevel'],
@@ -2207,7 +2208,7 @@ app.controller('DashController', ['$scope', '$window', 'sources', 'contributors'
         }
 
         // 在 CSV 内容的开头添加字段名
-        var headerRow = "Timestamp,BufferLength/缓冲区长度,rateLevel,rate/视频码率(Mbps),MaxIndex,"
+        var headerRow = "Type,Timestamp,BufferLength/缓冲区长度,rateLevel,rate/视频码率(Mbps),MaxIndex,"
             +"DroppedFrames/删除的帧,LiveLatency/延迟,PlaybackRate/媒体播放速率,"
             +"Download(min|avg|max),Latency(min|avg|max),Ratio(min|avg|max),"
             +"Etp/估计吞吐量(kpbs),Mtp/实际吞吐量(kpbs)\n";

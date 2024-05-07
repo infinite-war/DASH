@@ -1,9 +1,15 @@
 import unicodedata
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpt as np
 import os
 import re
 import glob
+
+VIDEO = "video"
+AUDIO = "audio"
+
+RATE_COLUMN = "rate/视频码率(Mbps)"
 
 def getMetricsAndPlot(fileName, filePath):
 
@@ -24,14 +30,6 @@ def getMetricsAndPlot(fileName, filePath):
     # # 获取指定列的数据，假设指定字段名为 '指定字段名'
     # specified_column = df['MaxIndex']
 
-    # print(df)
-    # # 打印指定列的数据
-    # print(specified_column)
-
-
-    # 获取指定列的数据，假设指定字段名为 'TimeStamp' 和 'MaxIndex'
-    # timestamp = df['Timestamp']
-    # max_index = df['MaxIndex']
     df["Timestamp"] = pd.to_datetime(df["Timestamp"])
     df["Time"] = (df["Timestamp"] - df["Timestamp"].iloc[0]).dt.total_seconds()
 
@@ -50,10 +48,19 @@ def getMetricsAndPlot(fileName, filePath):
     df["Time"] = (df["Timestamp"] - df["Timestamp"].iloc[0]).dt.total_seconds()
 
 
-    replaceChPattern = r"[/:|() ]"
+    video_data = df[df['Type'] == 'video']
+
+    # 平均码率(Mbps)
+    rate_mean = video_data[RATE_COLUMN].mean()
+    
+    # 统计切换次数
+    #  可能音频也被统计了进去，考虑添加一个标签列过滤掉音频
+    rate_switches = (video_data['rateLevel'] != video_data['rateLevel'].shift()).sum() - 1
 
 
     # 遍历每一列，绘制折线图并保存为单独的图像文件
+    replaceChPattern = r"[/:|() ]"
+    df = video_data
     for column in df.columns:
         if column not in ["Timestamp", "Time"]:
             df[column] = pd.to_numeric(df[column], errors='coerce').fillna(0)
