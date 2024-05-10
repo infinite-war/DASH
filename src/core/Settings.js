@@ -613,7 +613,8 @@ import Events from './events/Events';
  * The throughput estimate at any time is the minimum of the fast and slow estimates.
  *
  * This allows a fast reaction to a bandwidth drop and prevents oscillations on bandwidth spikes.
- * @property {string} [ABRStrategy="abrDynamic"]
+ * 配置ABR初始选项
+ * @property {string} [ABRStrategy="abrBola"]
  * Returns the current ABR strategy being used: "abrDynamic", "abrBola" or "abrThroughput".
  * @property {object} [trackSwitchMode={video: "neverReplace", audio: "alwaysReplace"}]
  * @property {object} [additionalAbrRules={insufficientBufferRule: true,switchHistoryRule: true,droppedFramesRule: true,abandonRequestsRule: true}]
@@ -1010,7 +1011,7 @@ function Settings() {
             },
             abr: {
                 movingAverageMethod: Constants.MOVING_AVERAGE_SLIDING_WINDOW,
-                ABRStrategy: Constants.ABR_STRATEGY_DYNAMIC,
+                ABRStrategy: Constants.ABR_STRATEGY_BOLA,
                 additionalAbrRules: {
                     insufficientBufferRule: true,
                     switchHistoryRule: true,

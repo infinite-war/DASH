@@ -132,6 +132,13 @@ class Constants {
         this.ABR_STRATEGY_BOLA = 'abrBola';
 
         /**
+         *  @constant {string} ABR_STRATEGY_MM 混合信息ABR (带宽和缓冲区水平)
+         *  @memberof Constants#
+         *  @static
+         */
+        this.ABR_STRATEGY_MM = 'abrMM';
+
+        /**
          *  @constant {string} ABR_STRATEGY_L2A Adaptive bitrate algorithm based on L2A (online learning)
          *  @memberof Constants#
          *  @static

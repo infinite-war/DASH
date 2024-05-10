@@ -76,6 +76,7 @@ function ABRRulesCollection(config) {
             // If LoLP is used we only need this one rule
             else if (settings.get().streaming.abr.ABRStrategy === Constants.ABR_STRATEGY_LoLP) {
                 // console.log(settings.get().streaming.abr.ABRStrategy)
+                // console.log(settings.get().streaming.abr.ABRStrategy)
                 qualitySwitchRules.push(
                     LoLPRule(context).create({
                         dashMetrics: dashMetrics
