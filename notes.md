@@ -1,5 +1,31 @@
 # 一些记录
 
+
+
+> 启动项目
+
+```bash
+npm install
+npm run start
+```
+
+然后浏览器打开`http://localhost:3000/samples/dash-if-reference-player/index.html`，这里就是视频播放器的实验地址
+
+> 样例播放器与ABR算法实现的位置
+
+```bash
+./samples/dash-if-reference-player
+```
+
+
+> 实现的ABR算法位置
+
+```bash
+dash.js/samples/dash-if-reference-player/app/rules/MultiMetricsRule.js
+```
+
+
+
 **官方现有的类图见\docs目录**
 
 

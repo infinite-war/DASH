@@ -1,6 +1,7 @@
 import unicodedata
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
 import os
 import argparse
 import re
@@ -11,6 +12,26 @@ from openpyxl import Workbook
 VIDEO = "video"
 AUDIO = "audio"
 RATE_COLUMN = "rate/视频码率(mbps)"
+BUFFER_LEVEL = "BufferLength/缓冲区长度"
+DOWNLOAD_MMA = "Download(min|avg|max)"
+LANTENCY_MMA = "Latency(min|avg|max)"
+RATIO_MMA = "Ratio(min|avg|max)"
+BANDWIDTH_AIX = "带宽(mbps)"
+
+column_data_map = {
+    BUFFER_LEVEL: "缓冲区视频内容时长(s)", 
+    RATE_COLUMN: "视频码率(mbps)",
+    "rateLevel": "码率级别",
+    "Latency": "延迟(s)",
+    "MaxIndex": "MaxIndex",
+    "DroppedFrames/删除的帧": "删除的帧数",
+    "PlaybackRate/媒体播放速率": "媒体播放速率",
+    "Download_min": "Download_min", "Download_avg": "Download_avg", "Download_max": "Download_max",
+    "Latency_min": "Latency_min", "Latency_avg": "Latency_avg", "Latency_max": "Latency_max",
+    "Ratio_min": "Ratio_min", "Ratio_avg": "Ratio_acg", "Ratio_max": "Ratio_max",
+    "Etp/估计吞吐量(kbps)": "估计吞吐量(kbps)",
+    "Mtp/实际吞吐量(kbps)": "Mtp/实际吞吐量(kbps)"
+}
 
 ENV1 = "env1"
 ENV2 = "env2"
@@ -64,47 +85,76 @@ def getMetricsAndPlot(fileName, filePath, step, env):
         case "env2":
             bandwidth_value = 4
 
+    wave_pattern = generate_wave_pattern(df, low_value=2, high_value=6, switch_interval=60)
 
     replaceChPattern = r"[/:|() ]"
 
     # 遍历每一列，绘制折线图并保存为单独的图像文件
+    skipList = ["Timestamp", "Time", "Type", DOWNLOAD_MMA, LANTENCY_MMA, RATIO_MMA]
     for column in df.columns:
-        if column not in ["Timestamp", "Time", "Type"]:
+        if column not in skipList:
+            columnName = column.split('/')[-1]
             df[column] = pd.to_numeric(df[column], errors='coerce').fillna(0)
 
             safe_column_name = unicodedata.normalize('NFKD', column).encode('ascii', 'ignore').decode('ascii')
             # 替换文件名中的非法字符
             safe_column_name = re.sub(replaceChPattern, '_', column)
         
-            fig, ax1 = plt.subplots(figsize=(10, 6))
+            fig, ax1 = plt.subplots(figsize=(8, 4))
 
             if step == 0:
-                ax1.plot(df["Time"], df[column], linestyle='-', label=column)
-                ax1.set_title(f'{column} 变化情况')
+                ax1.plot(df["Time"], df[column], linestyle='-', label=column_data_map[column])
+                # ax1.set_title(f'{columnName}变化情况')
             else:
-                ax1.plot(df["Time"][::step], df[column][::step], linestyle='-', label=column)
-                ax1.set_title(f'{column} 变化情况（每隔 {step} 个数据点）')
+                ax1.plot(df["Time"][::step], df[column][::step], linestyle='-', label=column_data_map[column])
+                # ax1.set_title(f'{columnName}变化情况(每隔{step}个数据点)')
 
             ax1.set_xlabel('时间/s')
-            ax1.set_ylabel(column)
-            ax1.legend(loc=f'upper left')
+            ax1.set_ylabel(column_data_map[column])
+            # ax1.legend(loc=f'upper left')
             ax1.grid(True)
 
-
+            
+            # 处理带宽线
             if column == RATE_COLUMN:
-                ax1.axhline(y=bandwidth_value, color='orange', linestyle='--', label=f'带宽 ({bandwidth_value} mbps)')
-            else:
-                # 右侧纵坐标
-                ax2 = ax1.twinx()
+                ax1.set_ylabel("视频码率|带宽(mbps)")
                 if env == ENV3:
-                    ax2 = 1 ## 《================
+                    if step == 0:
+                        ax1.plot(df["Time"], wave_pattern, color='orange', linestyle='--', label=f'带宽(mbps)')
+                    else:
+                        ax1.plot(df["Time"][::step], wave_pattern[::step], color='orange', linestyle='--', label=f'带宽(mbps)')
                 else:
-                    ax2.axhline(y=bandwidth_value, color='orange', linestyle='--', label=f'带宽 ({bandwidth_value} mbps)')
-                
-                ax2.set_ylabel('带宽/mbps')
-                ax2.legend(loc='upper right')
+                    ax1.axhline(y=bandwidth_value, color='orange', linestyle='--', label=f'带宽(mbps)')
 
-            save_path = os.path.join(plotDir, f'{safe_column_name}_plot.png')
+                handles1, labels1 = ax1.get_legend_handles_labels()
+                plt.legend(handles1, labels1, loc='upper left', ncol=len(labels1))
+            
+            else:
+                # 带宽的右侧纵坐标
+                ax2 = ax1.twinx()
+                ax1.set_ylabel(BANDWIDTH_AIX)
+                if env == ENV3:
+                    if step == 0:
+                        ax2.plot(df["Time"], wave_pattern, color='orange', linestyle='--', label=f'带宽(mbps)')
+                    else:
+                        ax2.plot(df["Time"][::step], wave_pattern[::step], color='orange', linestyle='--', label=f'带宽(mbps)')
+                else:
+                    ax2.axhline(y=bandwidth_value, color='orange', linestyle='--', label=f'带宽(mbps)')
+                
+                handles1, labels1 = ax1.get_legend_handles_labels()
+                handles2, labels2 = ax2.get_legend_handles_labels()
+                combined_handles = handles1 + handles2
+                combined_labels = labels1 + labels2
+                # plt.legend(combined_handles, combined_labels, loc=0)
+                plt.legend(combined_handles, combined_labels, bbox_to_anchor=(0.0, 1.02, 1.0, 0.102),
+                           loc='upper left', ncol=len(combined_labels), frameon=True)
+
+            save_path = ""
+            if step == 0:
+                save_path = os.path.join(plotDir, f'{columnName}变化情况.png')
+            else:
+                save_path = os.path.join(plotDir, f'{columnName}变化情况(每隔{step}个数据点).png')
+            fig.tight_layout()
             fig.savefig(save_path)
             plt.close(fig)
 
@@ -145,6 +195,10 @@ def clearDir(dirPath):
         except Exception as e:
             print(f"Error removing file: {file}. Error: {e}")
 
+def generate_wave_pattern(df, low_value=2, high_value=6, switch_interval=60):
+    time = df["Time"]
+    wave_pattern = np.where((time // switch_interval) % 2 == 0, low_value, high_value)
+    return wave_pattern
 
 
 

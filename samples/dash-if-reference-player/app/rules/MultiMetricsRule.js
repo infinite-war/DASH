@@ -315,7 +315,7 @@ function MultiMetricsRuleClass(){
         let m_v_N = getMean(videoRateList);
         // let sig_v_N = getSigma(videoRateList);
         let d_k = Math.abs(m_b_N - m_v_N) / m_b_N;
-        let d_max = 0.3;
+        let d_max = 0.4;
 
         let b_p = alpha * m_b_N_1;
         let b_k = bandWidthList.slice(-1);
@@ -354,11 +354,11 @@ function MultiMetricsRuleClass(){
                 let F_next_minus = calF(tempVList_minus);
                 let F_next_eq = calF(tempVList_eq);
                 
+                // switchRequest.priority = SwitchRequest.PRIORITY.STRONG;
                 let F_next_max = Math.max(F_next_plus, F_next_minus, F_next_eq);
-                if(F_next_max == F_next_max){
+                if(F_next_max == F_next_plus){
                     switchRequest.quality = r_k_plus;
                     switchRequest.reason = SWITCH_STATE_PLUS;
-                    // console.log(SWITCH_STATE_PLUS);
                 }else if(F_next_max == F_next_minus){
                     switchRequest.quality = r_k_minus;
                     switchRequest.reason = SWITCH_STATE_MINUS;
@@ -366,13 +366,14 @@ function MultiMetricsRuleClass(){
                     switchRequest.quality = r_k_eq;
                     switchRequest.reason = SWITCH_STATE_EQ;
                 }
-                return switchRequest;
             }else{
                 switchRequest.quality = getClosestRate(m_b_N);
+                // switchRequest.priority = SwitchRequest.PRIORITY.STRONG;
                 switchRequest.reason = SWITCH_STATE_B;
             }
         }else if(l_k > l_max){
-            // return SwitchRequest(context).create();
+            switchRequest.quality = getClosestRate(m_b_N);
+            return SwitchRequest(context).create();
         }else if(l_k < l_min){
             switchRequest.quality = -1;
             for(let i = r_k; i >= 0; i--){
@@ -383,6 +384,7 @@ function MultiMetricsRuleClass(){
                 }
             }
             switchRequest.quality = Math.max(switchRequest.quality, 0);
+            switchRequest.priority = SwitchRequest.PRIORITY.STRONG;
             switchRequest.reason = SWITCH_STATE_STABLE;
         }
 

@@ -408,8 +408,6 @@ function CustomBolaRuleClass() {
         
         console.log('===================use BOLARule====================');
 
-        const stableBufferTime = mediaPlayerModel.getStableBufferTime();
-
         // 初始化
         const switchRequest = SwitchRequest(context).create();
 
