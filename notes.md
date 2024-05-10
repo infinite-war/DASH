@@ -4,6 +4,8 @@
 
 > 启动项目
 
+项目切换到`extend_abr`分支
+
 ```bash
 npm install
 npm run start
