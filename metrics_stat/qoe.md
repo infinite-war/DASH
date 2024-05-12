@@ -1,0 +1,9 @@
+MultiMetricsRule_metrics_env1_qoe = 259.71
+MultiMetricsRule_metrics_env2_qoe = 167.333
+MultiMetricsRule_metrics_env3_qoe = 89.74400000000001
+CustomBolaRule_metrics_env1_qoe = 238.8979999999999
+CustomBolaRule_metrics_env2_qoe = 160.71500000000003
+CustomBolaRule_metrics_env3_qoe = 75.91300000000012
+DownloadRatioRule_metrics_env1_qoe = 91.16900000000001
+DownloadRatioRule_metrics_env2_qoe = 149.925
+DownloadRatioRule_metrics_env3_qoe = 76.89100000000077
