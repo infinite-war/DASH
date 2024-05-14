@@ -311,21 +311,21 @@ function MultiMetricsRuleClass(){
         let preBandWidthList = bandWidthList.slice(0, bandWidthList.length-1);
 
         let m_b_N = getMean(bandWidthList);
-        let m_b_N_1 = getMean(preBandWidthList);
+        let m_p = getMean(preBandWidthList);
         let m_v_N = getMean(videoRateList);
         // let sig_v_N = getSigma(videoRateList);
         let d_k = Math.abs(m_b_N - m_v_N) / m_b_N;
         let d_max = 0.4;
 
-        let b_p = alpha * m_b_N_1;
+        let b_p = alpha * m_p;
         let b_k = bandWidthList.slice(-1);
         let b_next = 0;
 
         if(b_k < b_p ){
             b_next = b_k;
-        }else if(b_k > m_b_N_1){
+        }else if(b_k >= m_p){
             b_next = m_b_N;
-        }else if(b_k >= b_p && b_k <= m_b_N_1){
+        }else if(b_k >= b_p && b_k < m_p){
             let buttom = (1-(1-w)**N);
             for(let i = 1; i <= bandWidthList.length; i++){
                 w_temp = w*(1-w)**i / buttom;

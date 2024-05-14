@@ -28,8 +28,8 @@ envList = [ENV1, ENV2, ENV3]
 
 # Weighting factors (These should be adjusted based on user preferences)
 
-avg_quality_weight = 0.1
-quality_variation_weight = 0.19
+avg_quality_weight = 0.15
+quality_variation_weight = 0.3
 switch_times_weight = 0.3
 rebuffering_weight = 0.3
 startup_delay_weight = 0.01
